@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusForge — Project Submission</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            color: #1a73e8;
+            font-size: 2.5em;
+            border-bottom: 2px solid #e8eaed;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #202124;
+            font-size: 1.8em;
+            margin-top: 40px;
+            border-bottom: 1px solid #f1f3f4;
+            padding-bottom: 8px;
+        }
+        h3 {
+            color: #3c4043;
+            font-size: 1.3em;
+            margin-top: 30px;
+        }
+        blockquote {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1a73e8;
+            margin: 20px 0;
+            padding: 15px 20px;
+            font-style: italic;
+            color: #5f6368;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.95em;
+        }
+        th, td {
+            border: 1px solid #dadce0;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #202124;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #fcfdfe;
+        }
+        code {
+            background-color: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #dadce0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul, ol {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #e8eaed;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>FocusForge — Project Submission</h1>
+
+    <blockquote>
+        <strong>Tagline:</strong> <em>AI-powered productivity intelligence that turns intention into execution.</em>
+    </blockquote>
+
+    <hr>
+
+    <h2>Problem Statement</h2>
+    <p>The modern knowledge worker faces a paradox: we have more tools to manage our time than ever before, yet global productivity is declining. According to McKinsey Global Institute, knowledge workers spend nearly <strong>60% of their workday on coordination and communication</strong> rather than skilled work. Existing productivity apps treat tasks as static checklists — they capture what needs to be done, but offer no intelligence about <em>when</em>, <em>how</em>, or <em>why</em>.</p>
+    <p>Mental load — the cognitive burden of planning, prioritizing, and remembering — is invisible, unmeasured, and unmanaged. The result: burnout, missed deadlines, and the chronic feeling of being busy without being productive.</p>
+
+    <hr>
+
+    <h2>Our Solution — FocusForge</h2>
+    <p><strong>FocusForge</strong> is an AI-native productivity platform that replaces passive task lists with an intelligent, adaptive productivity engine. It combines the power of <strong>Google Gemini AI</strong> with real-time behavioral data to understand how you work — not just what you plan to do — and helps you close the gap between intent and execution.</p>
+    <p>FocusForge dynamically prioritizes your day using a proprietary <strong>AI scoring engine</strong>, parses natural-language task input, and generates personalized coaching insights — functioning as a cognitive co-pilot that learns and grows with you.</p>
+
+    <hr>
+
+    <h2>Key Features</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>🧠 Natural Language Task Parsing</strong></td>
+                <td>Describe tasks in plain English — Gemini AI extracts titles, deadlines, priorities, tags, and recurrence automatically.</td>
+            </tr>
+            <tr>
+                <td><strong>📊 Dynamic Priority Scoring</strong></td>
+                <td>Tasks are scored in real-time based on urgency, effort, and behavioral history — not just due dates.</td>
+            </tr>
+            <tr>
+                <td><strong>🎯 AI Daily Planning</strong></td>
+                <td>One-click AI-generated daily plan that allocates tasks to time blocks based on your energy and context.</td>
+            </tr>
+            <tr>
+                <td><strong>💬 AI Coach</strong></td>
+                <td>Conversational productivity coach powered by Gemini that understands your full task and habit history.</td>
+            </tr>
+            <tr>
+                <td><strong>🔄 Habit Tracking</strong></td>
+                <td>Streak-based habit system with frequency rules (daily/weekly/monthly) and completion analytics.</td>
+            </tr>
+            <tr>
+                <td><strong>🎯 Goal Management</strong></td>
+                <td>Long-horizon goal tracking with milestone decomposition and AI-generated progress summaries.</td>
+            </tr>
+            <tr>
+                <td><strong>📅 Smart Calendar</strong></td>
+                <td>Full calendar integration with FullCalendar for scheduling visualization and time-block planning.</td>
+            </tr>
+            <tr>
+                <td><strong>⚡ Real-time Sync</strong></td>
+                <td>Socket.IO-powered live updates across all devices — changes reflect instantly.</td>
+            </tr>
+            <tr>
+                <td><strong>🔔 Background Workers</strong></td>
+                <td>BullMQ + Redis queue system for scheduled reminders and async AI processing.</td>
+            </tr>
+            <tr>
+                <td><strong>👥 Subscription Tiers</strong></td>
+                <td>Stripe-integrated billing with free and premium plans.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>Technical Architecture</h2>
+    <p>FocusForge is built as a production-grade, cloud-native monorepo — designed for scale, reliability, and extensibility.</p>
+
+    <h3>Tech Stack</h3>
+    <pre><code>Frontend        React 18 + TypeScript + Vite + TailwindCSS
+Backend         Node.js + Express + TypeScript
+AI Engine       Google Gemini 1.5 Flash (via @google/generative-ai)
+Database        Neon Serverless PostgreSQL + Prisma ORM
+Auth            Clerk (JWT-based, zero-session-storage)
+Queue System    BullMQ + Upstash Redis
+Realtime        Socket.IO (WebSocket)
+Payments        Stripe (subscription billing)
+Email           Resend (transactional)
+Deployment      Render (Backend + Frontend) + Neon (DB)
+Monorepo        npm Workspaces</code></pre>
+
+    <h3>Architecture Highlights</h3>
+    <ul>
+        <li><strong>Separation of concerns:</strong> API server and background worker run as independent concurrent processes, enabling fault isolation.</li>
+        <li><strong>Serverless-ready database:</strong> Neon's connection pooling and scale-to-zero architecture ensures cost efficiency at any scale.</li>
+        <li><strong>Stateless auth:</strong> Clerk JWTs are verified server-side on every request — no session storage, fully cloud-native.</li>
+        <li><strong>Type safety end-to-end:</strong> Shared Prisma types between API layers eliminate entire categories of runtime errors.</li>
+        <li><strong>AI orchestration:</strong> Gemini API calls are structured with Zod-validated schemas, preventing hallucinated or malformed responses from reaching the database.</li>
+    </ul>
+
+    <hr>
+
+    <h2>Impact & Innovation</h2>
+    <h3>What makes FocusForge different</h3>
+    <p>Most productivity apps are <strong>passive</strong> — they store what you tell them. FocusForge is <strong>active</strong> — it reasons about your work, surfaces what matters most, and coaches you toward your goals.</p>
+    <p>The integration of <strong>Gemini AI as a reasoning layer</strong> (not just a chatbot) is the core innovation. Instead of wrapping AI around a CRUD app, we built the data model <em>around</em> the AI's understanding of tasks, habits, goals, and behavioral patterns. Every data point — completion rates, streak history, priority scores, time estimates — feeds the AI coach, making it genuinely context-aware.</p>
+
+    <h3>Real-world impact potential</h3>
+    <ul>
+        <li><strong>Individuals:</strong> Reduces decision fatigue by automating daily planning.</li>
+        <li><strong>Students:</strong> Habit and goal tracking for academic performance improvement.</li>
+        <li><strong>Remote teams:</strong> Async-first productivity with real-time sync across time zones.</li>
+        <li><strong>Mental health:</strong> Reduces burnout by surfacing workload patterns and recovery insights.</li>
+    </ul>
+
+    <hr>
+
+    <h2>Live Demo</h2>
+    <ul>
+        <li><strong>Application URL:</strong> <a href="https://focusforge-frontend-9hi2.onrender.com" target="_blank">https://focusforge-frontend-9hi2.onrender.com</a></li>
+        <li><strong>API URL:</strong> <a href="https://focusforge-api-pka3.onrender.com" target="_blank">https://focusforge-api-pka3.onrender.com</a></li>
+        <li><strong>Source Code (GitHub):</strong> <a href="https://github.com/Ankitp2005/FocusForge" target="_blank">https://github.com/Ankitp2005/FocusForge</a></li>
+    </ul>
+
+    <hr>
+
+    <h2>Team</h2>
+    <p><strong>Ankit Pandey</strong> — Full-Stack Developer & AI Systems Engineer<br>
+    Designed, built, and deployed the entire FocusForge platform end-to-end — from database schema design and AI prompt engineering to React UI and cloud infrastructure.</p>
+
+    <hr>
+
+    <h2>Built With Google Technology</h2>
+    <p>FocusForge is powered by <strong>Google Gemini 1.5 Flash</strong> as its core intelligence layer:</p>
+    <ul>
+        <li>Natural language understanding for task parsing</li>
+        <li>Contextual daily plan generation</li>
+        <li>Personalized coaching conversations with full memory of user history</li>
+        <li>Progress analysis and motivational feedback generation</li>
+    </ul>
+    <p>Gemini was chosen for its <strong>long-context window</strong>, <strong>structured output capabilities</strong> (critical for reliable JSON extraction), and its ability to maintain coherent multi-turn conversations about complex productivity data.</p>
+
+    <hr>
+    <p><em>FocusForge — Because the gap between potential and performance is a systems problem.</em></p>
+
+</body>
+</html>
