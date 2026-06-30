@@ -32,10 +32,11 @@ services:
         sync: false
 
   # 2. Frontend React Client (Static Website Hosting)
-  - type: static
+  - type: web
     name: focusforge-frontend
+    env: static
     buildCommand: npm run build --workspace=apps/web
-    publishDir: apps/web/dist
+    staticPublishPath: apps/web/dist
     envVars:
       - key: VITE_API_URL
         sync: false # Set to the URL of the focusforge-api service + /api/v1 (e.g. https://focusforge-api.onrender.com/api/v1)
