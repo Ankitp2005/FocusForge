@@ -79,7 +79,12 @@ app.use((_req, res, next) => {
 app.use(
   cors({
     origin: env.NODE_ENV === 'production'
-      ? ['https://focusforge.app', 'https://www.focusforge.app']
+      ? [
+          'https://focusforge.app',
+          'https://www.focusforge.app',
+          'https://focusforge-frontend-9hi2.onrender.com',
+          ...(env.APP_URL ? [env.APP_URL] : []),
+        ]
       : [env.APP_URL, 'http://localhost:5173'],
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
