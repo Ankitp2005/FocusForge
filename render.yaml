@@ -4,7 +4,7 @@ services:
     name: focusforge-api
     env: node
     plan: free
-    buildCommand: npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
@@ -37,7 +37,7 @@ services:
   - type: web
     name: focusforge-frontend
     env: static
-    buildCommand: npm run build --workspace=apps/web
+    buildCommand: npm install --include=dev && npm run build --workspace=apps/web
     staticPublishPath: apps/web/dist
     envVars:
       - key: NPM_CONFIG_PRODUCTION
