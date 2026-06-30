@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { Toaster, toast } from 'react-hot-toast';
+import { Capacitor } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
 
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, useAuth } from '@clerk/clerk-react';
 import { Login } from '@/pages/Login';
@@ -44,6 +46,22 @@ function AppContent() {
       document.documentElement.classList.remove('dark');
     }
   }, []);
+
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      CapApp.addListener('appUrlOpen', (event: any) => {
+        try {
+          const url = new URL(event.url);
+          const path = url.pathname || url.hash.replace('#', '');
+          if (path) {
+            navigate(path);
+          }
+        } catch (e) {
+          console.error('Failed to parse deep link url:', event.url, e);
+        }
+      });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const handleTaskUpdated = () => {
@@ -193,10 +211,12 @@ function App() {
     );
   }
 
+  const RouterComponent = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter;
+
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/login">
       <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <RouterComponent>
         <AppContent />
         <Toaster 
           position="bottom-right" 
@@ -210,7 +230,7 @@ function App() {
             },
           }}
         />
-      </BrowserRouter>
+      </RouterComponent>
       </QueryClientProvider>
     </ClerkProvider>
   );

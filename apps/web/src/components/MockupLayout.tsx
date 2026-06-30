@@ -27,10 +27,10 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
   ];
 
   return (
-    <div className="min-h-screen md:min-h-screen h-[100dvh] md:h-auto bg-dot-grid md:py-6 md:px-4 p-0 flex flex-col items-center justify-center font-body relative overflow-hidden md:overflow-visible">
+    <div className="min-h-screen bg-dot-grid py-6 px-4 flex flex-col items-center justify-center font-body relative">
       
-      {/* Mockup Phone Card Container - Fluid on mobile, card on desktop */}
-      <div className="w-full md:max-w-[460px] h-[100dvh] md:min-h-[92vh] md:max-h-[95vh] bg-[#FAF7F2] border-0 md:border-[3px] border-black rounded-none md:rounded-[42px] shadow-none md:shadow-[8px_8px_0px_#000] flex flex-col justify-between overflow-hidden relative pt-8 pb-4 px-4 md:p-6 select-none">
+      {/* Mockup Phone Card Container */}
+      <div className="w-full max-w-[460px] min-h-[92vh] max-h-[95vh] bg-[#FAF7F2] border-[3px] border-black rounded-[42px] shadow-[8px_8px_0px_#000] flex flex-col justify-between overflow-hidden relative p-4 md:p-6 select-none">
         
         {/* Top Profile Header Widget */}
         <div className="flex items-center justify-between border-b-[3px] border-black pb-4 mb-4">
@@ -71,13 +71,13 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
 
         {/* Floating action button inside phone card */}
         {floatingButton && (
-          <div className="absolute bottom-[90px] md:bottom-[96px] left-6 right-6 z-30 flex justify-end">
+          <div className="absolute bottom-[96px] left-6 right-6 z-30 flex justify-end">
             {floatingButton}
           </div>
         )}
 
-        {/* Floating bottom menu matching reference - Pinned to bottom on mobile, floating on desktop */}
-        <div className="absolute bottom-0 left-0 right-0 md:bottom-4 md:left-4 md:right-4 bg-white border-t-[3px] border-b-0 border-x-0 md:border-[3px] border-black rounded-none md:rounded-[24px] shadow-none md:shadow-[4px_4px_0px_#000] flex justify-around items-center py-3 md:py-2 px-1 pb-6 md:pb-2 z-20">
+        {/* Floating bottom menu matching reference */}
+        <div className="absolute bottom-4 left-4 right-4 bg-white border-[3px] border-black rounded-[24px] shadow-[4px_4px_0px_#000] flex justify-around items-center py-2 px-1 z-20">
           {navItems.map((item) => {
             const active = activeTab === item.id;
             const Icon = item.icon;
