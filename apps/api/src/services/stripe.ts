@@ -3,7 +3,7 @@ import { env } from '../config/env';
 
 const isMockMode = !env.STRIPE_SECRET_KEY || env.STRIPE_SECRET_KEY.startsWith('mock_');
 
-export const stripe = isMockMode ? null : new Stripe(env.STRIPE_SECRET_KEY, {
+export const stripe = isMockMode ? null : new Stripe(env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20', // Latest stable
 });
 

@@ -26,7 +26,7 @@ router.post('/stripe', express.raw({ type: 'application/json' }), async (req, re
     event = stripe.webhooks.constructEvent(
       req.body, // This is raw because of express.raw()
       signature,
-      env.STRIPE_WEBHOOK_SECRET
+      env.STRIPE_WEBHOOK_SECRET || ''
     );
   } catch (err: any) {
     logger.error(`Webhook signature verification failed: ${err.message}`);
