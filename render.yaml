@@ -1,0 +1,49 @@
+services:
+  # 1. API Backend and Background Queue Worker (combined into a single Web Service)
+  - type: web
+    name: focusforge-api
+    env: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: focusforge-redis
+          property: connectionString
+      - key: DATABASE_URL
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_PUBLISHABLE_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+
+  # 2. Frontend React Client (Static Website Hosting)
+  - type: web
+    name: focusforge-frontend
+    env: static
+    plan: free
+    buildCommand: npm run build --workspace=apps/web
+    publishDir: apps/web/dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false # Set to the URL of the focusforge-api service + /api/v1 (e.g. https://focusforge-api.onrender.com/api/v1)
+
+  # 3. Redis Queue Database
+  - type: redis
+    name: focusforge-redis
+    plan: free
+    ipAllowList: [] # Private/internal connection only

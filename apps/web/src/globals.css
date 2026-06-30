@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-black:      #0A0A0A;
+    --color-white:      #FAF7F2;
+    --color-paper:      #FAF7F2;
+    --color-concrete:   #A09E96;
+    
+    --color-red:        #FF4B55;
+    --color-red-bg:     #FFEBEB;
+    --color-yellow:     #FFD600;
+    --color-yellow-bg:  #FFFDE6;
+    --color-green:      #47D185;
+    --color-green-bg:   #EAFBF2;
+    
+    --color-electric:   #4CD9E3;
+  }
+  
+  /* Class-based dark mode support */
+  .dark {
+    --color-black:      #F5F0E8;
+    --color-white:      #0A0A0A;
+    --color-paper:      #141414;
+    --color-concrete:   #555050;
+    
+    --color-red:        #FF1A25;
+    --color-red-bg:     #3A0006;
+    --color-yellow:     #FFE000;
+    --color-yellow-bg:  #2A2200;
+    --color-green:      #00CC66;
+    --color-green-bg:   #002A14;
+    
+    --color-electric:   #337aff;
+  }
+  
+  /* Light Mode Page-Specific Multi-Color Themes */
+  html:not(.dark) .theme-dashboard {
+    --color-black:      #0A0A0A;
+  }
+  html:not(.dark) .theme-focus {
+    --color-black:      #2A1D11;
+  }
+  html:not(.dark) .theme-coach {
+    --color-black:      #130D35;
+  }
+  html:not(.dark) .theme-goals {
+    --color-black:      #300F21;
+  }
+  html:not(.dark) .theme-habits {
+    --color-black:      #082415;
+  }
+  html:not(.dark) .theme-calendar {
+    --color-black:      #082226;
+  }
+  html:not(.dark) .theme-analytics {
+    --color-black:      #081730;
+  }
+  html:not(.dark) .theme-settings {
+    --color-black:      #1F242A;
+  }
+}
+
+/* Dotted grid desk background pattern */
+.bg-dot-grid {
+  background-color: #FCBC1A;
+  background-image: radial-gradient(#0A0A0A 2px, transparent 2px);
+  background-size: 18px 18px;
+}
+
+/* Organic, hand-drawn marker highlights */
+.marker-highlight {
+  background: linear-gradient(180deg, transparent 55%, #FFD600 55%);
+}
+
+.nav-active-highlight {
+  background-color: #FFD600;
+  border-radius: 65% 35% 60% 40% / 40% 60% 40% 60%;
+}
+
+/* Force Clerk components to fill available width to prevent text clipping */
+.cl-rootBox,
+.cl-signIn-root,
+.cl-signUp-root,
+.cl-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Ensure all internal Clerk elements respect the container boundaries */
+[class^="cl-"], [class*=" cl-"] {
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+body {
+  font-family: var(--font-body), monospace;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+/* Base focus styles */
+*:focus-visible {
+  outline: 3px solid var(--color-electric);
+  outline-offset: 2px;
+}
+
+/* Scrollbars - Premium Retro Cyberpunk Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-paper);
+  border-left: 3px solid var(--color-black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-black);
+  border: 2px solid var(--color-paper);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-electric);
+}
+
+/* Buttons and interactive elements */
+button, a {
+  transition: transform 100ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 100ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px var(--color-black) !important;
+}
+
+/* Stacked Paper Hover Effects */
+.brutal-card-hover {
+  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.brutal-card-hover:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0px var(--color-black) !important;
+}
+
+/* Custom Overdue Animation */
+.task-card.overdue {
+  background: var(--color-red);
+  border-color: #8B0000;
+  box-shadow: 8px 8px 0px #8B0000;
+  animation: siren 0.8s step-end infinite;
+  color: var(--color-white);
+}
+
+@keyframes siren {
+  0%, 100% {
+    background: var(--color-red);
+    box-shadow: 8px 8px 0px #8B0000;
+  }
+  50% {
+    background: #8B0000;
+    box-shadow: 8px 8px 0px var(--color-red);
+  }
+}
+
+@keyframes countdown-flash {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.countdown-critical {
+  color: var(--color-red);
+  background: var(--color-red-bg);
+  animation: countdown-flash 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-card.overdue {
+    animation: none;
+  }
+  .countdown-critical {
+    animation: none;
+  }
+}
+
