@@ -11,6 +11,8 @@ services:
         value: production
       - key: PORT
         value: 3001
+      - key: NPM_CONFIG_PRODUCTION
+        value: false
       - key: REDIS_URL
         fromService:
           type: redis
@@ -38,6 +40,8 @@ services:
     buildCommand: npm run build --workspace=apps/web
     staticPublishPath: apps/web/dist
     envVars:
+      - key: NPM_CONFIG_PRODUCTION
+        value: false
       - key: VITE_API_URL
         sync: false # Set to the URL of the focusforge-api service + /api/v1 (e.g. https://focusforge-api.onrender.com/api/v1)
 
