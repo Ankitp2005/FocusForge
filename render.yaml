@@ -43,7 +43,9 @@ services:
       - key: NODE_ENV
         value: development
       - key: VITE_API_URL
-        sync: false # Set to the URL of the focusforge-api service + /api/v1 (e.g. https://focusforge-api.onrender.com/api/v1)
+        sync: false
+      - key: VITE_CLERK_PUBLISHABLE_KEY
+        sync: false
 
   # 3. Redis Queue Database
   - type: redis
