@@ -21,8 +21,8 @@ const envSchema = z.object({
   GEMINI_API_KEY: z.string(),
 
   // Stripe
-  STRIPE_SECRET_KEY: z.string(),
-  STRIPE_WEBHOOK_SECRET: z.string(),
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
 
   // Email
   RESEND_API_KEY: z.string(),
