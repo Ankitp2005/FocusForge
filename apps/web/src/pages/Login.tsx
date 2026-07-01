@@ -1,4 +1,4 @@
-import { SignIn, useSignIn } from '@clerk/clerk-react';
+import { SignIn } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
 import { ShieldAlert, Cpu } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
@@ -17,7 +17,6 @@ const BOOT_LOGS = [
 
 export const Login = () => {
   const [logs, setLogs] = useState<string[]>([]);
-  const { signIn } = useSignIn();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -31,14 +30,6 @@ export const Login = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleGoogleSignIn = async () => {
-    if (!signIn) return;
-    await signIn.authenticateWithRedirect({
-      strategy: 'oauth_google',
-      redirectUrl: 'https://focusforge-frontend-9hi2.onrender.com/sso-callback',
-      redirectUrlComplete: 'https://focusforge-frontend-9hi2.onrender.com/sso-callback',
-    });
-  };
 
   return (
     <div className="flex min-h-screen bg-lmls-paper text-lmls-black">
