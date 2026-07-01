@@ -14,6 +14,11 @@ const config: CapacitorConfig = {
       'localhost',
       'localhost:*'
     ]
+  },
+  plugins: {
+    CapacitorCookies: {
+      enabled: true
+    }
   }
 };
 

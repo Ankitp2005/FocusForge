@@ -220,7 +220,11 @@ function App() {
   const RouterComponent = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter;
 
   return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/login">
+    <ClerkProvider 
+      publishableKey={PUBLISHABLE_KEY} 
+      afterSignOutUrl="/login"
+      allowedRedirectOrigins={['https://localhost', 'http://localhost']}
+    >
       <QueryClientProvider client={queryClient}>
       <RouterComponent>
         <AppContent />
