@@ -54,7 +54,7 @@ function AppContent() {
         try {
           const url = new URL(event.url);
           if (url.protocol === 'focusforge:') {
-            window.location.href = 'https://localhost/' + url.search + url.hash;
+            window.location.href = window.location.origin + '/' + url.search + url.hash;
           } else {
             const path = url.pathname || url.hash.replace('#', '');
             if (path) {
