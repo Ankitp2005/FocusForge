@@ -1,32 +1,33 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
+// This page lives on the Render production domain.
+// When Clerk finishes Google OAuth, it redirects Chrome here.
+// This page then redirects Chrome to the focusforge:// native scheme,
+// which Android intercepts to re-open the native app.
 export const SsoCallback = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Redirect Chrome/external browser to the native app custom scheme with the Clerk tokens
-    const mobileUrl = 'focusforge://sso-callback' + location.search + location.hash;
-    window.location.href = mobileUrl;
-  }, [location]);
+    // Build the native deep link with all Clerk's query params & hash preserved
+    const nativeUrl = 'focusforge://sso-callback' + location.search + location.hash;
+    window.location.href = nativeUrl;
+  }, [location.search, location.hash]);
 
   return (
-    <div className="min-h-screen bg-lmls-paper flex items-center justify-center font-body border-4 border-lmls-black">
-      <div className="text-center p-8 border-4 border-lmls-black bg-lmls-white shadow-brutal-lg max-w-md">
-        <h1 className="text-3xl font-display font-black uppercase mb-4 tracking-tighter">
-          AUTHORIZATION NOMINAL
+    <div style={{ minHeight: '100vh', background: '#F5F0E8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif' }}>
+      <div style={{ textAlign: 'center', padding: '2rem', border: '4px solid #0A0A0A', background: '#fff', maxWidth: '400px' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '1rem' }}>
+          Authentication Complete
         </h1>
-        <div className="text-lg font-display font-black tracking-tight animate-pulse uppercase text-lmls-electric mb-4">
-          REDIRECTING TO FOCUSFORGE APP...
-        </div>
-        <p className="text-sm font-mono text-lmls-concrete leading-relaxed">
-          If you are not redirected automatically, tap the link below:
+        <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '1.5rem' }}>
+          Redirecting you back to FocusForge...
         </p>
-        <a 
+        <a
           href={'focusforge://sso-callback' + location.search + location.hash}
-          className="inline-block mt-6 px-6 py-3 bg-lmls-yellow text-lmls-black font-label font-bold uppercase tracking-wider border-2 border-lmls-black shadow-brutal-sm hover:shadow-brutal-hover hover:bg-lmls-white transition-all"
+          style={{ display: 'inline-block', padding: '0.75rem 1.5rem', background: '#FFD600', color: '#0A0A0A', fontWeight: 900, textTransform: 'uppercase', border: '2px solid #0A0A0A', textDecoration: 'none' }}
         >
-          Open App Manually
+          Open FocusForge App
         </a>
       </div>
     </div>
