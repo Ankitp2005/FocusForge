@@ -223,7 +223,7 @@ function App() {
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY} 
       afterSignOutUrl="/login"
-      allowedRedirectOrigins={['https://localhost', 'http://localhost']}
+      allowedRedirectOrigins={['https://localhost', 'http://localhost', 'http://10.122.31.247:5173']}
     >
       <QueryClientProvider client={queryClient}>
       <RouterComponent>

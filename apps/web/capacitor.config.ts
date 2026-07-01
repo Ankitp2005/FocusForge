@@ -5,6 +5,7 @@ const config: CapacitorConfig = {
   appName: 'FocusForge',
   webDir: 'dist',
   server: {
+    url: 'http://10.122.31.247:5173',
     androidScheme: 'https',
     cleartext: true,
     allowNavigation: [
