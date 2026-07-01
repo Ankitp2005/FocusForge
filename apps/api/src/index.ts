@@ -85,7 +85,10 @@ app.use(
           'https://focusforge-frontend-9hi2.onrender.com',
           ...(env.APP_URL ? [env.APP_URL] : []),
         ]
-      : [env.APP_URL, 'http://localhost:5173'],
+      : (origin, callback) => {
+          // Allow any origin in development to support mobile live-reload testing
+          callback(null, origin || '*');
+        },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
