@@ -23,6 +23,9 @@ jobs:
         run: npm install
 
       - name: Build Web Client
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm run build --workspace=apps/web
 
       - name: Sync Capacitor
