@@ -1,6 +1,7 @@
 import { SignIn } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
 import { ShieldAlert, Cpu } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
 
 const BOOT_LOGS = [
   'SYSTEM: Initializing FocusForge Secure Link...',
@@ -94,6 +95,7 @@ export const Login = () => {
           
           <SignIn 
             signUpUrl="/register"
+            forceRedirectUrl={Capacitor.isNativePlatform() ? "focusforge://sso-callback" : undefined}
             appearance={{
               elements: {
                 rootBox: {

@@ -1,6 +1,7 @@
 import { SignUp } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
 import { ShieldAlert, Cpu } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
 
 const REGISTER_BOOT_LOGS = [
   'SYSTEM: Readying registration sequences...',
@@ -93,6 +94,7 @@ export const Register = () => {
           
           <SignUp 
             signInUrl="/login"
+            forceRedirectUrl={Capacitor.isNativePlatform() ? "focusforge://sso-callback" : undefined}
             appearance={{
               elements: {
                 rootBox: {

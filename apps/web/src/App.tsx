@@ -52,9 +52,13 @@ function AppContent() {
       CapApp.addListener('appUrlOpen', (event: any) => {
         try {
           const url = new URL(event.url);
-          const path = url.pathname || url.hash.replace('#', '');
-          if (path) {
-            navigate(path);
+          if (url.protocol === 'focusforge:') {
+            window.location.href = 'https://localhost/' + url.search + url.hash;
+          } else {
+            const path = url.pathname || url.hash.replace('#', '');
+            if (path) {
+              navigate(path);
+            }
           }
         } catch (e) {
           console.error('Failed to parse deep link url:', event.url, e);
