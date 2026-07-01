@@ -10,7 +10,9 @@ const config: CapacitorConfig = {
     allowNavigation: [
       '*.clerk.accounts.dev',
       '*.clerk.com',
-      'focusforge-frontend-9hi2.onrender.com'
+      'focusforge-frontend-9hi2.onrender.com',
+      'localhost',
+      'localhost:*'
     ]
   }
 };
