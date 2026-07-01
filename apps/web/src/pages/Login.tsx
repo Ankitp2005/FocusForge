@@ -95,7 +95,7 @@ export const Login = () => {
           
           <SignIn 
             signUpUrl="/register"
-            forceRedirectUrl={Capacitor.isNativePlatform() ? "focusforge://sso-callback" : undefined}
+            forceRedirectUrl={Capacitor.isNativePlatform() ? "https://focusforge-frontend-9hi2.onrender.com/sso-callback" : undefined}
             appearance={{
               elements: {
                 rootBox: {

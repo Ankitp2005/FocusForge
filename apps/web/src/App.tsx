@@ -15,6 +15,7 @@ import { Settings } from '@/pages/Settings';
 import { Analytics } from '@/pages/Analytics';
 import { Goals } from '@/pages/Goals';
 import { Habits } from '@/pages/Habits';
+import { SsoCallback } from '@/pages/SsoCallback';
 import { initializeSocket, disconnectSocket } from '@/lib/socket';
 import { fetchApi } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -183,6 +184,7 @@ function AppContent() {
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/sso-callback" element={<SsoCallback />} />
         
         {/* Protected Routes */}
         <Route path="/" element={<Navigate to="/today" replace />} />
