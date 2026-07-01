@@ -9,7 +9,8 @@ const config: CapacitorConfig = {
     cleartext: true,
     allowNavigation: [
       '*.clerk.accounts.dev',
-      '*.clerk.com'
+      '*.clerk.com',
+      'focusforge-frontend-9hi2.onrender.com'
     ]
   }
 };
