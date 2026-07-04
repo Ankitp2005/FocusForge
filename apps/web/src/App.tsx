@@ -1,6 +1,5 @@
-// Trigger build with new Supabase repository secrets
 import { useState, useEffect } from 'react';
-import { BrowserRouter, HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { Toaster, toast } from 'react-hot-toast';
 import { Capacitor } from '@capacitor/core';
@@ -37,6 +36,7 @@ interface Reminder {
 function AppContent() {
   const queryClientInstance = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeReminder, setActiveReminder] = useState<Reminder | null>(null);
   const { isLoaded, isSignedIn, getToken } = useAuth();
   const snoozeTask = useSnoozeTask();
@@ -52,6 +52,7 @@ function AppContent() {
 
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
+      // 1. Handle deep link redirects
       CapApp.addListener('appUrlOpen', (event: any) => {
         try {
           const url = new URL(event.url);
@@ -85,8 +86,22 @@ function AppContent() {
           console.error('Failed to parse deep link url:', event.url, e);
         }
       });
+
+      // 2. Handle native back button / swipe back gestures
+      const backListener = CapApp.addListener('backButton', () => {
+        const rootPaths = ['/today', '/login', '/register', '/'];
+        if (rootPaths.includes(location.pathname)) {
+          CapApp.exitApp();
+        } else {
+          navigate(-1);
+        }
+      });
+
+      return () => {
+        backListener.then(handler => handler.remove());
+      };
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   useEffect(() => {
     const handleTaskUpdated = () => {
