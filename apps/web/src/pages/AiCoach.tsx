@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useAuth } from '@clerk/clerk-react';
+import { useAuth } from '@/components/AuthProvider';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MockupLayout } from '@/components/MockupLayout';
 import { env } from '@/lib/env';

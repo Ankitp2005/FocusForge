@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { differenceInDays } from 'date-fns';
 import { fetchApi } from '@/lib/api';
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '@/components/AuthProvider';
 import { MockupLayout } from '@/components/MockupLayout';
 import toast from 'react-hot-toast';
 import { Plus, Search, X, Star } from 'lucide-react';

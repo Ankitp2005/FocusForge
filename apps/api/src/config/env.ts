@@ -13,9 +13,9 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   REDIS_URL: z.string().default('redis://localhost:6379'),
 
-  // Clerk Auth
-  CLERK_SECRET_KEY: z.string(),
-  CLERK_PUBLISHABLE_KEY: z.string(),
+  // Supabase Auth
+  SUPABASE_URL: z.string(),
+  SUPABASE_ANON_KEY: z.string(),
 
   // Gemini
   GEMINI_API_KEY: z.string(),
@@ -49,8 +49,8 @@ export const env = parsed.success ? parsed.data : {
   API_URL: process.env.API_URL || 'http://localhost:3001',
   DATABASE_URL: process.env.DATABASE_URL || '',
   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
-  CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY || '',
-  CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY || '',
+  SUPABASE_URL: process.env.SUPABASE_URL || '',
+  SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || '',
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || '',

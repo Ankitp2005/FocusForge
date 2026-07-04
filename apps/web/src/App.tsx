@@ -5,7 +5,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import { Capacitor } from '@capacitor/core';
 import { App as CapApp } from '@capacitor/app';
 
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, useAuth } from '@clerk/clerk-react';
+import { AuthProvider, SignedIn, SignedOut, RedirectToSignIn, useAuth } from '@/components/AuthProvider';
 import { Login } from '@/pages/Login';
 import { Register } from '@/pages/Register';
 import { Today } from '@/pages/Today';
@@ -19,6 +19,7 @@ import { SsoCallback } from '@/pages/SsoCallback';
 import { initializeSocket, disconnectSocket } from '@/lib/socket';
 import { fetchApi } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/lib/supabase';
 
 import { useSnoozeTask } from '@/hooks/useTasks';
 
@@ -55,14 +56,23 @@ function AppContent() {
           const url = new URL(event.url);
           if (url.protocol === 'focusforge:') {
             if (url.hostname === 'sso-callback') {
-              // The Clerk OAuth handshake params arrived via the custom scheme.
-              // We cannot let Chrome handle https://localhost (ERR_CONNECTION_REFUSED).
-              // Instead, load the handshake URL directly in the Capacitor WebView —
-              // the WebView CAN reach https://localhost because Capacitor serves from there.
-              // Clerk will process the handshake, set session cookies, and navigate to /today.
-              const clerkParams = url.search; // ?_clerk_db_jwt=...&_clerk_handshake=...
-              const dest = url.hash || '#/today';
-              window.location.href = 'https://localhost/' + clerkParams + dest;
+              // Parse Supabase access & refresh tokens from deep link hash
+              // Scheme: focusforge://sso-callback#access_token=...&refresh_token=...
+              const hash = url.hash.substring(1);
+              const params = new URLSearchParams(hash);
+              const accessToken = params.get('access_token');
+              const refreshToken = params.get('refresh_token');
+              
+              if (accessToken && refreshToken) {
+                supabase.auth.setSession({
+                  access_token: accessToken,
+                  refresh_token: refreshToken
+                }).then(() => {
+                  navigate('/today', { replace: true });
+                }).catch(err => {
+                  console.error('Failed to set Supabase session from deep link:', err);
+                });
+              }
             } else {
               const path = url.pathname || url.hash.replace('#', '');
               if (path) {
@@ -213,27 +223,11 @@ function AppContent() {
   );
 }
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-
 function App() {
-  if (!PUBLISHABLE_KEY) {
-    return (
-      <div className="min-h-screen bg-lmls-red text-lmls-white p-10 font-body">
-        <h1 className="text-4xl font-display font-black mb-4">CRITICAL ERROR</h1>
-        <p className="text-xl">Missing <strong>VITE_CLERK_PUBLISHABLE_KEY</strong> in apps/web/.env</p>
-        <p className="mt-4">Please add your Clerk API key to continue.</p>
-      </div>
-    );
-  }
-
   const RouterComponent = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter;
 
   return (
-    <ClerkProvider 
-      publishableKey={PUBLISHABLE_KEY} 
-      afterSignOutUrl="/login"
-      allowedRedirectOrigins={['https://localhost', 'http://localhost', 'http://10.122.31.247:5173']}
-    >
+    <AuthProvider>
       <QueryClientProvider client={queryClient}>
       <RouterComponent>
         <AppContent />
@@ -251,7 +245,7 @@ function App() {
         />
       </RouterComponent>
       </QueryClientProvider>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }
 

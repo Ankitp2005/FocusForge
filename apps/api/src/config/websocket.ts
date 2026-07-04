@@ -1,7 +1,6 @@
 import { Server, Socket } from 'socket.io';
-import { verifyToken } from '@clerk/express';
+import { supabase } from './supabase';
 import { prisma } from './database';
-import { env } from './env';
 import { logger } from './logger';
 
 let globalIo: Server | null = null;
@@ -18,13 +17,16 @@ export function setupWebSocket(io: Server) {
         return next(new Error('Authentication error: Missing token'));
       }
 
-      const decoded = await verifyToken(token, {
-        secretKey: env.CLERK_SECRET_KEY,
-      });
+      // Verify token with Supabase Auth
+      const { data: { user: sbUser }, error: sbError } = await supabase.auth.getUser(token);
 
-      const clerkId = decoded.sub;
+      if (sbError || !sbUser) {
+        return next(new Error('Authentication error: Invalid or expired token'));
+      }
+
+      const supabaseId = sbUser.id;
       const user = await prisma.user.findUnique({
-        where: { clerkId, deletedAt: null },
+        where: { supabaseId, deletedAt: null },
       });
 
       if (!user) {

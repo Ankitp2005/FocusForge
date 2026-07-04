@@ -15,7 +15,7 @@ import {
   Sparkles,
   LogOut
 } from 'lucide-react';
-import { useClerk } from '@clerk/clerk-react';
+import { useClerk } from '@/components/AuthProvider';
 
 export const Settings = () => {
   const navigate = useNavigate();

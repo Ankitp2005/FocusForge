@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useTasks, useCompleteTask, useUpdateTask } from '@/hooks/useTasks';
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '@/components/AuthProvider';
 import { MockupLayout } from '@/components/MockupLayout';
 import { fetchApi } from '@/lib/api';
 import toast from 'react-hot-toast';

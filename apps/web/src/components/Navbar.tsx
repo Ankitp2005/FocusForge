@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useClerk, useUser } from '@clerk/clerk-react';
+import { useClerk, useUser } from '@/components/AuthProvider';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { 

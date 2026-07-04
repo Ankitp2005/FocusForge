@@ -16,8 +16,7 @@ const config: CapacitorConfig = {
   server: {
     androidScheme: 'https',
     allowNavigation: [
-      '*.clerk.accounts.dev',
-      '*.clerk.com',
+      '*.supabase.co',
       'focusforge-frontend-9hi2.onrender.com',
       'localhost',
       'localhost:*'

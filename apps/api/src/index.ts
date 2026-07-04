@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import { clerkMiddleware } from '@clerk/express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 
@@ -106,7 +105,6 @@ app.use(express.json({ limit: '10mb' })); // SECURITY.md §4.2: 10MB max
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('combined', { stream: { write: (msg) => logger.info(msg.trim()) } }));
 app.use(requestLogger);
-app.use(clerkMiddleware({ secretKey: env.CLERK_SECRET_KEY, publishableKey: env.CLERK_PUBLISHABLE_KEY }));
 
 app.use('/api', globalRateLimiter);
 

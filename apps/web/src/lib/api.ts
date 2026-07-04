@@ -16,13 +16,11 @@ export const fetchApi = async <T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> => {
-  let token = null;
+  let token: string | null = null;
   try {
-    // @ts-ignore
-    if (window.Clerk?.session) {
-      // @ts-ignore
-      token = await window.Clerk.session.getToken();
-    }
+    const { supabase } = await import('./supabase');
+    const { data: { session } } = await supabase.auth.getSession();
+    token = session?.access_token || null;
   } catch(err) {}
   
   const headers = new Headers(options.headers);

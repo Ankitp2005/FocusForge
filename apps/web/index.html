@@ -9,34 +9,6 @@
     <title>FocusForge - Forging Pure Productivity</title>
   </head>
   <body>
-    <!-- CRITICAL: This script runs SYNCHRONOUSLY before React/Clerk loads.
-         
-         Problem: When Chrome lands on /sso-callback?_clerk_handshake=..., we fire
-         focusforge:// to open the native app. BUT Chrome does NOT navigate away —
-         it stays on the page, loads React, and ClerkProvider sees _clerk_handshake,
-         then redirects Chrome to https://localhost → ERR_CONNECTION_REFUSED.
-
-         Fix: After firing focusforge://, immediately strip ALL Clerk params from the
-         URL via history.replaceState(). When React/Clerk loads milliseconds later,
-         it sees a clean "/" URL with no params — nothing to process, no localhost
-         redirect. The native app handles auth via the appUrlOpen deep link. -->
-    <script>
-      (function () {
-        if (window.location.pathname === '/sso-callback') {
-          var search = window.location.search;
-          var hash = window.location.hash;
-
-          // 1. Fire the deep link so Android opens the native app
-          window.location.replace('focusforge://sso-callback' + search + hash);
-
-          // 2. IMMEDIATELY strip all Clerk params from this page's URL.
-          //    Chrome keeps this page open after a custom-scheme redirect.
-          //    Without this, ClerkProvider would see _clerk_handshake and
-          //    redirect Chrome to https://localhost (ERR_CONNECTION_REFUSED).
-          window.history.replaceState({}, document.title, '/');
-        }
-      })();
-    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

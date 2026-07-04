@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '@/components/AuthProvider';
 import { Trophy, Home, Users, Calendar, Edit3, Sparkles } from 'lucide-react';
 
 interface MockupLayoutProps {
