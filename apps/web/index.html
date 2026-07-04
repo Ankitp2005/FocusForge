@@ -9,6 +9,22 @@
     <title>FocusForge - Forging Pure Productivity</title>
   </head>
   <body>
+    <!-- CRITICAL: This script runs SYNCHRONOUSLY before React/Clerk loads.
+         It fires the focusforge:// deep link immediately when Chrome lands on
+         /sso-callback after Google OAuth. This prevents Clerk's ClerkProvider
+         from intercepting the URL and redirecting Chrome to https://localhost
+         (which causes ERR_CONNECTION_REFUSED on mobile). -->
+    <script>
+      (function () {
+        if (window.location.pathname === '/sso-callback') {
+          var nativeUrl =
+            'focusforge://sso-callback' +
+            window.location.search +
+            window.location.hash;
+          window.location.replace(nativeUrl);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

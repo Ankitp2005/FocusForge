@@ -54,15 +54,20 @@ function AppContent() {
         try {
           const url = new URL(event.url);
           if (url.protocol === 'focusforge:') {
-            // Use navigate() instead of window.location.href to avoid a hard
-            // reload that resets Clerk state and causes the black screen.
-            // Route to /sso-callback preserving all Clerk query params & hash.
-            const destination = '/sso-callback' + url.search + url.hash;
-            navigate(destination, { replace: true });
-          } else {
-            const path = url.pathname || url.hash.replace('#', '');
-            if (path) {
-              navigate(path);
+            if (url.hostname === 'sso-callback') {
+              // The Clerk OAuth handshake params arrived via the custom scheme.
+              // We cannot let Chrome handle https://localhost (ERR_CONNECTION_REFUSED).
+              // Instead, load the handshake URL directly in the Capacitor WebView —
+              // the WebView CAN reach https://localhost because Capacitor serves from there.
+              // Clerk will process the handshake, set session cookies, and navigate to /today.
+              const clerkParams = url.search; // ?_clerk_db_jwt=...&_clerk_handshake=...
+              const dest = url.hash || '#/today';
+              window.location.href = 'https://localhost/' + clerkParams + dest;
+            } else {
+              const path = url.pathname || url.hash.replace('#', '');
+              if (path) {
+                navigate(path);
+              }
             }
           }
         } catch (e) {
