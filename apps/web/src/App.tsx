@@ -1,3 +1,4 @@
+// Trigger build with new Supabase repository secrets
 import { useState, useEffect } from 'react';
 import { BrowserRouter, HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
