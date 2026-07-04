@@ -6,6 +6,7 @@ import { Priority, TaskStatus } from '@prisma/client';
 import { fetchCalendarEvents, createCalendarEvent } from './googleCalendar';
 import { calculatePriorityScore } from '../utils/priority';
 import { emitToUser } from '../config/websocket';
+import { reminderQueue, prioritizationQueue } from '../config/queue';
 
 const isMockMode = !env.GEMINI_API_KEY || env.GEMINI_API_KEY.trim() === '' || env.GEMINI_API_KEY.startsWith('mock_');
 
@@ -170,6 +171,39 @@ async function executeTool(
             priorityScore,
           },
         });
+
+        // Schedule new reminder if due date is set
+        if (dueDate) {
+          const userPrefs = await prisma.userPreferences.findUnique({
+            where: { userId },
+          });
+          const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 30;
+          const remindAt = new Date(dueDate.getTime() - leadTimeMins * 60 * 1000);
+
+          const reminder = await prisma.taskReminder.create({
+            data: {
+              taskId: task.id,
+              userId,
+              remindAt,
+              status: 'PENDING',
+            },
+          });
+
+          const delay = Math.max(0, remindAt.getTime() - Date.now());
+          await reminderQueue.add(
+            'send-reminder',
+            { reminderId: reminder.id },
+            { delay, jobId: `reminder:${reminder.id}` }
+          );
+        }
+
+        // Recalculate priority
+        await prioritizationQueue.add(
+          'recalc-priority',
+          { userId },
+          { jobId: `prioritize:${userId}:${Date.now()}` }
+        );
+
         emitToUser(userId, 'TASK_UPDATED', { type: 'create', taskId: task.id });
         return JSON.stringify({ success: true, task: { id: task.id, title: task.title } });
       }
@@ -179,6 +213,18 @@ async function executeTool(
           where: { id: toolInput.taskId, userId, deletedAt: null },
         });
         if (!task) return JSON.stringify({ error: 'Task not found' });
+
+        // Remove old reminder jobs
+        const oldReminders = await prisma.taskReminder.findMany({
+          where: { taskId: task.id, status: 'PENDING' },
+        });
+        for (const oldRem of oldReminders) {
+          const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+          if (job) await job.remove();
+        }
+        await prisma.taskReminder.deleteMany({
+          where: { taskId: task.id, status: 'PENDING' },
+        });
 
         await prisma.task.update({
           where: { id: task.id },
@@ -209,6 +255,54 @@ async function executeTool(
           where: { id: task.id },
           data: updateData,
         });
+
+        // If dueDate or priority changes, re-evaluate reminders and prioritization
+        if (toolInput.dueDate !== undefined || toolInput.priority !== undefined) {
+          // Remove old reminder jobs
+          const oldReminders = await prisma.taskReminder.findMany({
+            where: { taskId: task.id, status: 'PENDING' },
+          });
+          for (const oldRem of oldReminders) {
+            const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+            if (job) await job.remove();
+          }
+          await prisma.taskReminder.deleteMany({
+            where: { taskId: task.id, status: 'PENDING' },
+          });
+
+          // Schedule new reminder if new due date is set
+          if (newDueDate) {
+            const userPrefs = await prisma.userPreferences.findUnique({
+              where: { userId },
+            });
+            const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 30;
+            const remindAt = new Date(newDueDate.getTime() - leadTimeMins * 60 * 1000);
+
+            const reminder = await prisma.taskReminder.create({
+              data: {
+                taskId: task.id,
+                userId,
+                remindAt,
+                status: 'PENDING',
+              },
+            });
+
+            const delay = Math.max(0, remindAt.getTime() - Date.now());
+            await reminderQueue.add(
+              'send-reminder',
+              { reminderId: reminder.id },
+              { delay, jobId: `reminder:${reminder.id}` }
+            );
+          }
+
+          // Recalculate priority
+          await prioritizationQueue.add(
+            'recalc-priority',
+            { userId },
+            { jobId: `prioritize:${userId}:${Date.now()}` }
+          );
+        }
+
         emitToUser(userId, 'TASK_UPDATED', { type: 'update', taskId: updated.id });
         return JSON.stringify({ success: true, task: { id: updated.id, title: updated.title } });
       }
@@ -219,13 +313,58 @@ async function executeTool(
         });
         if (!task) return JSON.stringify({ error: 'Task not found' });
 
+        const snoozeUntilDate = new Date(toolInput.snoozeUntil);
+
         await prisma.task.update({
           where: { id: task.id },
           data: {
             status: TaskStatus.SNOOZED,
-            snoozedUntil: new Date(toolInput.snoozeUntil),
+            snoozedUntil: snoozeUntilDate,
           },
         });
+
+        // Remove old pending reminders and schedule new reminder
+        const oldReminders = await prisma.taskReminder.findMany({
+          where: { taskId: task.id, status: 'PENDING' },
+        });
+        for (const oldRem of oldReminders) {
+          const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+          if (job) await job.remove();
+        }
+        await prisma.taskReminder.deleteMany({
+          where: { taskId: task.id, status: 'PENDING' },
+        });
+
+        const userPrefs = await prisma.userPreferences.findUnique({
+          where: { userId },
+        });
+        const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 30;
+        const remindAt = new Date(snoozeUntilDate.getTime() - leadTimeMins * 60 * 1000);
+        const finalRemindAt = remindAt.getTime() > Date.now() ? remindAt : snoozeUntilDate;
+
+        const reminder = await prisma.taskReminder.create({
+          data: {
+            taskId: task.id,
+            userId,
+            remindAt: finalRemindAt,
+            status: 'PENDING',
+          },
+        });
+
+        const delay = Math.max(0, finalRemindAt.getTime() - Date.now());
+        await reminderQueue.add(
+          'send-reminder',
+          { reminderId: reminder.id },
+          { delay, jobId: `reminder:${reminder.id}` }
+        );
+
+        // Recalculate priority
+        await prioritizationQueue.add(
+          'recalc-priority',
+          { userId },
+          { jobId: `prioritize:${userId}:${Date.now()}` }
+        );
+
         emitToUser(userId, 'TASK_UPDATED', { type: 'snooze', taskId: task.id });
         return JSON.stringify({ success: true, snoozedTask: task.title, snoozeUntil: toolInput.snoozeUntil });
       }
