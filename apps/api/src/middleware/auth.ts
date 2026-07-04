@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { supabase } from '../config/supabase';
 import { prisma } from '../config/database';
+import { redis } from '../config/redis';
 import { Plan, User as PrismaUser } from '@prisma/client';
 import { logger } from '../config/logger';
 
@@ -20,7 +21,7 @@ declare global {
   }
 }
 
-// 1. We extract and verify the bearer token via Supabase Auth
+// 1. We extract and verify the bearer token via Supabase Auth (caching via Redis to prevent HTTP overhead)
 // 2. We sync the authenticated Supabase user to our Prisma database.
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -34,6 +35,23 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       });
     }
 
+    // 1. Check Redis session cache first to bypass external Supabase HTTP requests
+    const cacheKey = `user_token:${token}`;
+    try {
+      const cachedSession = await redis.get(cacheKey);
+      if (cachedSession) {
+        const cachedUser = JSON.parse(cachedSession);
+        // Ensure user is not soft-deleted
+        if (!cachedUser.deletedAt) {
+          req.user = cachedUser;
+          return next();
+        }
+      }
+    } catch (redisErr) {
+      logger.error('Failed to read from Redis cache, falling back to database', redisErr);
+    }
+
+    // 2. Fallback: Authenticate token via Supabase Auth
     const { data: { user: sbUser }, error: sbError } = await supabase.auth.getUser(token);
 
     if (sbError || !sbUser) {
@@ -74,6 +92,13 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
           data: { name, avatarUrl },
         });
       }
+    }
+
+    // 3. Cache the verified session back to Redis (TTL: 5 minutes)
+    try {
+      await redis.setex(cacheKey, 300, JSON.stringify(user));
+    } catch (redisErr) {
+      logger.error('Failed to write user session to Redis cache', redisErr);
     }
 
     req.user = user;
