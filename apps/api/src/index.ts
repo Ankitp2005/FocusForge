@@ -82,6 +82,9 @@ app.use(
           'https://focusforge.app',
           'https://www.focusforge.app',
           'https://focusforge-frontend-9hi2.onrender.com',
+          'http://localhost',
+          'https://localhost',
+          'capacitor://localhost',
           ...(env.APP_URL ? [env.APP_URL] : []),
         ]
       : (origin, callback) => {
