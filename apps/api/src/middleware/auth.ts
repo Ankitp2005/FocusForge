@@ -104,7 +104,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     req.user = user;
     next();
   } catch (error: any) {
-    logger.error('Failed to sync user session:', error);
+    logger.error(`Failed to sync user session: ${error?.message || error}`, { stack: error?.stack });
     return res.status(401).json({
       success: false,
       error: { 
