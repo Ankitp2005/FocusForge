@@ -66,9 +66,25 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       where: { supabaseId, deletedAt: null },
     });
 
+    const email = sbUser.email || `${supabaseId}@supabase.local`;
+
+    // If not found by supabaseId, try finding by email to link the migrated account
+    if (!user) {
+      const existingUser = await prisma.user.findFirst({
+        where: { email, deletedAt: null },
+      });
+
+      if (existingUser) {
+        // Link the existing user to the new Supabase ID
+        user = await prisma.user.update({
+          where: { id: existingUser.id },
+          data: { supabaseId },
+        });
+      }
+    }
+
     // Lazily create user on first request
     if (!user) {
-      const email = sbUser.email || `${supabaseId}@supabase.local`;
       const name = sbUser.user_metadata?.full_name || sbUser.user_metadata?.name || email.split('@')[0] || 'Operator';
       const avatarUrl = sbUser.user_metadata?.avatar_url || sbUser.user_metadata?.picture || null;
 
