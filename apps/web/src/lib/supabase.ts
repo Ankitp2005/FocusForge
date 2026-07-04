@@ -1,13 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// These are public client keys, safe to include in the client bundle.
+const supabaseUrl = 'https://sxjahrrnjtahpwjpdgod.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4amFocnJuanRhaHB3anBkZ29kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxNTAzNDYsImV4cCI6MjA5ODcyNjM0Nn0.2vAzcMDV2cUGnmn6-jU5--pdNwCQeAfnoadq0uLHiHo';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Warning: Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in environment variables.');
-}
-
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder'
-);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
