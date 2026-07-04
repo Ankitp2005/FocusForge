@@ -54,7 +54,11 @@ function AppContent() {
         try {
           const url = new URL(event.url);
           if (url.protocol === 'focusforge:') {
-            window.location.href = window.location.origin + '/' + url.search + url.hash;
+            // Use navigate() instead of window.location.href to avoid a hard
+            // reload that resets Clerk state and causes the black screen.
+            // Route to /sso-callback preserving all Clerk query params & hash.
+            const destination = '/sso-callback' + url.search + url.hash;
+            navigate(destination, { replace: true });
           } else {
             const path = url.pathname || url.hash.replace('#', '');
             if (path) {

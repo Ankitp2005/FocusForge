@@ -4,10 +4,17 @@ const config: CapacitorConfig = {
   appId: 'com.focusforge.app',
   appName: 'FocusForge',
   webDir: 'dist',
+  // NOTE FOR LOCAL DEVELOPMENT ONLY:
+  // To use live-reload while testing, temporarily uncomment the server block below
+  // and replace the URL with your current machine's local IP:
+  //
+  // server: {
+  //   url: 'http://YOUR_LOCAL_IP:5173',
+  //   androidScheme: 'http',
+  //   cleartext: true,
+  // },
   server: {
-    url: 'http://10.122.31.247:5173',
     androidScheme: 'https',
-    cleartext: true,
     allowNavigation: [
       '*.clerk.accounts.dev',
       '*.clerk.com',
