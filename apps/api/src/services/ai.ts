@@ -147,7 +147,7 @@ Rules:
       estimatedMins,
     });
   } catch (err: any) {
-    logger.warn(`[AI Task Parser] Gemini API failed or rate-limited. Falling back to local regex parser: ${err.message}`);
+    logger.warn(`[AI Task Parser] Gemini API failed or rate-limited. Falling back to local timezone-aware regex parser: ${err.message}`);
 
     const lower = text.toLowerCase();
     let priority: Priority = 'MEDIUM';
@@ -163,7 +163,6 @@ Rules:
     
     // Simple regex parser for time/date in text (e.g. 11:30 PM, 23:30, 9pm, etc.)
     const timeMatch = text.match(/(\d{1,2}):(\d{2})\s*(am|pm)?/i) || text.match(/(\d{1,2})\s*(am|pm)/i);
-    const date = new Date();
     
     if (timeMatch) {
       let hours = parseInt(timeMatch[1], 10);
@@ -175,9 +174,72 @@ Rules:
         if (ampm.toLowerCase() === 'am' && hours === 12) hours = 0;
       }
       
-      date.setHours(hours, mins, 0, 0);
-      dueDate = date.toISOString();
+      try {
+        // Resolve timezone offset safely using Intl.DateTimeFormat
+        const userTz = timezone || 'UTC';
+        
+        // Helper function to resolve UTC date from local date components in a given timezone
+        const getUtcDate = (y: number, m: number, d: number, hr: number, mn: number, tz: string) => {
+          const baseDate = new Date(Date.UTC(y, m, d, hr, mn));
+          const formatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: tz,
+            hourCycle: 'h23',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric'
+          });
+          
+          const parts = formatter.formatToParts(baseDate);
+          const partMap = Object.fromEntries(parts.map(p => [p.type, p.value]));
+          
+          const testDate = new Date(Date.UTC(
+            parseInt(partMap.year, 10),
+            parseInt(partMap.month, 10) - 1,
+            parseInt(partMap.day, 10),
+            parseInt(partMap.hour, 10),
+            parseInt(partMap.minute, 10)
+          ));
+          
+          const diffMs = baseDate.getTime() - testDate.getTime();
+          return new Date(baseDate.getTime() + diffMs);
+        };
+
+        const currentLocalFormatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: userTz,
+          hourCycle: 'h23',
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+        });
+        
+        const currentLocalParts = currentLocalFormatter.formatToParts(new Date());
+        const currentLocalMap = Object.fromEntries(currentLocalParts.map(p => [p.type, p.value]));
+        
+        const localYear = parseInt(currentLocalMap.year, 10);
+        const localMonth = parseInt(currentLocalMap.month, 10) - 1;
+        const localDay = parseInt(currentLocalMap.day, 10);
+
+        let dueDateObj = getUtcDate(localYear, localMonth, localDay, hours, mins, userTz);
+        
+        // If the calculated time is already in the past (e.g. user is testing a same-day task due in 2 minutes,
+        // but because of formatting/parsing components it resolves slightly in the past), 
+        // we keep it if it is within 5 minutes of now (same hour block), otherwise we push it to tomorrow.
+        const fiveMinsAgo = Date.now() - 5 * 60 * 1000;
+        if (dueDateObj.getTime() < fiveMinsAgo) {
+          dueDateObj = getUtcDate(localYear, localMonth, localDay + 1, hours, mins, userTz);
+        }
+        
+        dueDate = dueDateObj.toISOString();
+      } catch (tzErr) {
+        logger.warn('[AI Task Parser] Failed to parse with user timezone, falling back to UTC', tzErr);
+        const date = new Date();
+        date.setHours(hours, mins, 0, 0);
+        dueDate = date.toISOString();
+      }
     } else {
+      const date = new Date();
       // Default to end of day if relative keywords are found
       if (lower.includes('today')) {
         date.setHours(23, 59, 59, 999);
