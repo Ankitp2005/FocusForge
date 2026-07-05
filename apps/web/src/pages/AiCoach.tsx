@@ -3,8 +3,9 @@ import { useAuth } from '@/components/AuthProvider';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MockupLayout } from '@/components/MockupLayout';
 import { env } from '@/lib/env';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Mic, MicOff, Sparkles } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 interface Message {
   id: string;
@@ -29,7 +30,59 @@ export const AiCoach = () => {
   const [input, setInput] = useState('');
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setInput(transcript);
+          sendMessage(transcript);
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error', event);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      toast.error('SPEECH INPUT NOT SUPPORTED ON THIS BROWSER');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+    } else {
+      try {
+        recognitionRef.current.start();
+      } catch (err) {
+        console.error('Failed to start speech recognition', err);
+      }
+    }
+  };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -121,13 +174,25 @@ export const AiCoach = () => {
   // Full-width chat input form passed to floatingButton layout prop
   const chatInput = (
     <form onSubmit={handleSend} className="flex gap-2 w-full bg-white p-2 border-[2.5px] border-black rounded-[18px] shadow-[4px_4px_0px_#000] items-center">
+      <button
+        type="button"
+        onClick={toggleListening}
+        className={`w-10 h-10 border-[2px] border-black rounded-xl flex items-center justify-center shadow-[2px_2px_0px_#000] transition-colors cursor-pointer shrink-0 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+          isListening 
+            ? 'bg-[#FF4B55] text-white animate-pulse' 
+            : 'bg-[#FAF7F2] text-black hover:bg-[#FFD600] transition-colors'
+        }`}
+        title={isListening ? 'Stop Voice Input' : 'Use Voice Input'}
+      >
+        {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+      </button>
       <input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         disabled={isPending}
         className="flex-1 bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2.5 text-xs font-body font-bold focus:outline-none focus:border-[#FFD600] placeholder-black/30"
-        placeholder="ASK THE COACH..."
+        placeholder={isListening ? "LISTENING... SPEAK NOW" : "ASK THE COACH..."}
       />
       <button
         type="submit"
