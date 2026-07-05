@@ -31,35 +31,35 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
       {/* Phone Card Container — horizontal padding removed to allow full-width scrollbar alignment */}
       <div className="w-full max-w-full md:max-w-[460px] min-h-screen md:min-h-[92vh] max-h-screen md:max-h-[95vh] bg-transparent md:bg-[#FAF7F2] border-none md:border-[4px] md:border-black rounded-none md:rounded-[14px] shadow-none md:shadow-[10px_10px_0px_#000] flex flex-col justify-between overflow-hidden relative py-4 md:py-6 px-0 select-none">
         
-        {/* Top Profile Header — horizontal padding added here */}
-        <div className="flex items-center justify-between border-b-[3px] border-black pb-4 mb-4 px-4 md:px-6">
-          <div className="flex items-center gap-3">
+        {/* Top Profile Header — Solid card container to prevent text floating on dots */}
+        <div className="flex items-center justify-between border-[3px] border-black bg-white rounded-[10px] p-3 shadow-[4px_4px_0px_#000] mb-4 mx-4 md:mx-6">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             {/* Avatar — hard square-ish border */}
-            <div className="w-12 h-12 rounded-[8px] border-[3px] border-black overflow-hidden bg-white shrink-0 shadow-[3px_3px_0px_#000]">
+            <div className="w-10 h-10 rounded-[8px] border-[2.5px] border-black overflow-hidden bg-white shrink-0 shadow-[2px_2px_0px_#000]">
               <img src={imageUrl} alt="Avatar" className="w-full h-full object-cover scale-105" />
             </div>
             
             {/* User Details */}
-          <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-            <div className="flex items-center gap-1.5 flex-nowrap overflow-hidden">
-              <span className="font-display font-black text-[13px] leading-tight text-[#0A0A0A] truncate min-w-0 shrink">* {fullName}</span>
-              <span className="bg-[#FFD600] text-[#0A0A0A] border-[2px] border-black px-1.5 py-0.5 rounded-[4px] text-[8px] font-black tracking-wide leading-none shadow-[2px_2px_0px_#000] shrink-0 whitespace-nowrap">
-                @{username}
+            <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+              <div className="flex items-center gap-1.5 flex-nowrap overflow-hidden">
+                <span className="font-display font-black text-[12px] leading-tight text-[#0A0A0A] truncate min-w-0 shrink">* {fullName}</span>
+                <span className="bg-[#FFD600] text-[#0A0A0A] border-[2px] border-black px-1.5 py-0.5 rounded-[4px] text-[8px] font-black tracking-wide leading-none shadow-[1.5px_1.5px_0px_#000] shrink-0 whitespace-nowrap">
+                  @{username}
+                </span>
+              </div>
+              <span className="text-[9px] font-label font-black text-black/60 leading-none mt-1 tracking-wide uppercase truncate">
+                Let's grow together!
               </span>
             </div>
-            <span className="text-[9px] font-label font-black text-black/60 leading-none mt-1 tracking-wide uppercase truncate">
-              Let's grow together!
-            </span>
-          </div>
           </div>
 
           {/* Edit button — sharper, more brutalist */}
           <button
             onClick={() => navigate('/settings')}
-            className="w-9 h-9 rounded-[8px] bg-[#4CD9E3] border-[2.5px] border-black flex items-center justify-center shadow-[3px_3px_0px_#000] hover:bg-black hover:text-white transition-colors cursor-pointer shrink-0 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
+            className="w-8 h-8 rounded-[8px] bg-[#4CD9E3] border-[2px] border-black flex items-center justify-center shadow-[2px_2px_0px_#000] hover:bg-black hover:text-white transition-colors cursor-pointer shrink-0 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ml-2"
             title="Edit Profile Settings"
           >
-            <Edit3 className="w-4 h-4" />
+            <Edit3 className="w-3.5 h-3.5" />
           </button>
         </div>
 
