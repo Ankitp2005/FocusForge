@@ -271,9 +271,15 @@ export const Habits = () => {
 
         {/* Active Habits Section */}
         <div className="flex flex-col gap-3 mt-1">
-          <div className="flex items-center gap-2">
-            <span className="font-display font-black text-xs uppercase text-black tracking-wider">🔥 Active Today</span>
-            <span className="bg-[#FFD600] text-black border-[2px] border-black px-2 py-0.5 rounded-[4px] text-[9px] font-black shadow-[2px_2px_0px_#000]">{incompleteHabits.length}</span>
+          <div className="flex items-center">
+            <div className="flex items-center gap-2 bg-white border-[2.5px] border-black rounded-[8px] px-3.5 py-1.5 shadow-[3px_3px_0px_#000]">
+              <span className="font-display font-black text-xs uppercase text-black tracking-wider flex items-center gap-1.5">
+                🔥 Active Today
+              </span>
+              <span className="bg-[#FFD600] text-black border-[1.5px] border-black px-1.5 py-0.5 rounded-[4px] text-[8px] font-black shadow-[1.5px_1.5px_0px_#000]">
+                {incompleteHabits.length}
+              </span>
+            </div>
           </div>
           
           {isLoading ? (
@@ -335,9 +341,15 @@ export const Habits = () => {
 
         {/* Completed Habits Section */}
         <div className="flex flex-col gap-3 mt-2">
-          <div className="flex items-center gap-2">
-            <span className="font-display font-black text-xs uppercase text-black tracking-wider">✅ Done Today</span>
-            <span className="bg-[#C3EE52] text-black border-[2px] border-black px-2 py-0.5 rounded-[4px] text-[9px] font-black shadow-[2px_2px_0px_#000]">{completedHabits.length}</span>
+          <div className="flex items-center">
+            <div className="flex items-center gap-2 bg-white border-[2.5px] border-black rounded-[8px] px-3.5 py-1.5 shadow-[3px_3px_0px_#000]">
+              <span className="font-display font-black text-xs uppercase text-black tracking-wider flex items-center gap-1.5">
+                ✅ Done Today
+              </span>
+              <span className="bg-[#C3EE52] text-black border-[1.5px] border-black px-1.5 py-0.5 rounded-[4px] text-[8px] font-black shadow-[1.5px_1.5px_0px_#000]">
+                {completedHabits.length}
+              </span>
+            </div>
           </div>
           
           {completedHabits.length === 0 ? (

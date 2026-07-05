@@ -267,6 +267,15 @@ button:active:not(:disabled) {
   animation: countdown-flash 1s step-end infinite;
 }
 
+/* Hide scrollbar utility for touch/overflow controls */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
 @keyframes slide-up-in {
   from { transform: translateY(12px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }

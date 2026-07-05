@@ -28,11 +28,11 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
   return (
     <div className="min-h-screen bg-dot-grid md:py-6 md:px-4 p-0 flex flex-col items-center justify-center font-body relative">
       
-      {/* Phone Card Container — sharper corners, heavier border, deeper shadow */}
-      <div className="w-full max-w-full md:max-w-[460px] min-h-screen md:min-h-[92vh] max-h-screen md:max-h-[95vh] bg-transparent md:bg-[#FAF7F2] border-none md:border-[4px] md:border-black rounded-none md:rounded-[14px] shadow-none md:shadow-[10px_10px_0px_#000] flex flex-col justify-between overflow-hidden relative p-4 md:p-6 select-none">
+      {/* Phone Card Container — horizontal padding removed to allow full-width scrollbar alignment */}
+      <div className="w-full max-w-full md:max-w-[460px] min-h-screen md:min-h-[92vh] max-h-screen md:max-h-[95vh] bg-transparent md:bg-[#FAF7F2] border-none md:border-[4px] md:border-black rounded-none md:rounded-[14px] shadow-none md:shadow-[10px_10px_0px_#000] flex flex-col justify-between overflow-hidden relative py-4 md:py-6 px-0 select-none">
         
-        {/* Top Profile Header */}
-        <div className="flex items-center justify-between border-b-[3px] border-black pb-4 mb-4">
+        {/* Top Profile Header — horizontal padding added here */}
+        <div className="flex items-center justify-between border-b-[3px] border-black pb-4 mb-4 px-4 md:px-6">
           <div className="flex items-center gap-3">
             {/* Avatar — hard square-ish border */}
             <div className="w-12 h-12 rounded-[8px] border-[3px] border-black overflow-hidden bg-white shrink-0 shadow-[3px_3px_0px_#000]">
@@ -63,8 +63,8 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
           </button>
         </div>
 
-        {/* Scrollable Main Content Frame */}
-        <div className={`flex-1 overflow-y-auto pr-1 scrollbar-thin ${floatingButton ? 'pb-44' : 'pb-24'}`}>
+        {/* Scrollable Main Content Frame — horizontal padding added here */}
+        <div className={`flex-1 overflow-y-auto px-4 md:px-6 scrollbar-thin ${floatingButton ? 'pb-44' : 'pb-24'}`}>
           {children}
         </div>
 

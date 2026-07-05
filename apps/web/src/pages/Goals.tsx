@@ -248,7 +248,7 @@ export const Goals = () => {
         </div>
 
         {/* Tab Controls — solid block button system */}
-        <div className="flex gap-2 select-none overflow-x-auto pb-1">
+        <div className="flex gap-2 select-none overflow-x-auto pb-1 no-scrollbar">
           {(['CREATED', 'INVITED', 'PUBLIC', 'SUBMITTED'] as const).map((tab) => {
             const active = activeTab === tab;
             return (
