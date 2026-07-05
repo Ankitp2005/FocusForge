@@ -147,15 +147,70 @@ Rules:
       estimatedMins,
     });
   } catch (err: any) {
-    const errorDetails = err instanceof z.ZodError ? JSON.stringify(err.errors, null, 2) : err.stack || err.message;
-    try {
-      require('fs').appendFileSync(
-        'C:/Users/Ankit pandey/.gemini/antigravity-ide/brain/0fdc7169-b038-4a33-8f8f-9279759d898a/scratch/request_debug.txt',
-        `[GEMINI ERROR] ${new Date().toISOString()}\nError Details:\n${errorDetails}\n----------------------------\n`
-      );
-    } catch (e) {}
-    logger.error('Failed to parse Gemini JSON output', { err });
-    throw new Error('Failed to extract structured data from AI output');
+    logger.warn(`[AI Task Parser] Gemini API failed or rate-limited. Falling back to local regex parser: ${err.message}`);
+
+    const lower = text.toLowerCase();
+    let priority: Priority = 'MEDIUM';
+    if (lower.includes('urgent') || lower.includes('asap') || lower.includes('critical')) {
+      priority = 'CRITICAL';
+    } else if (lower.includes('important') || lower.includes('high') || lower.includes('tomorrow')) {
+      priority = 'HIGH';
+    } else if (lower.includes('low') || lower.includes('someday')) {
+      priority = 'LOW';
+    }
+
+    let dueDate: string | null = null;
+    
+    // Simple regex parser for time/date in text (e.g. 11:30 PM, 23:30, 9pm, etc.)
+    const timeMatch = text.match(/(\d{1,2}):(\d{2})\s*(am|pm)?/i) || text.match(/(\d{1,2})\s*(am|pm)/i);
+    const date = new Date();
+    
+    if (timeMatch) {
+      let hours = parseInt(timeMatch[1], 10);
+      const mins = timeMatch[2] ? parseInt(timeMatch[2], 10) : 0;
+      const ampm = timeMatch[3];
+      
+      if (ampm) {
+        if (ampm.toLowerCase() === 'pm' && hours < 12) hours += 12;
+        if (ampm.toLowerCase() === 'am' && hours === 12) hours = 0;
+      }
+      
+      date.setHours(hours, mins, 0, 0);
+      dueDate = date.toISOString();
+    } else {
+      // Default to end of day if relative keywords are found
+      if (lower.includes('today')) {
+        date.setHours(23, 59, 59, 999);
+        dueDate = date.toISOString();
+      } else if (lower.includes('tomorrow')) {
+        date.setDate(date.getDate() + 1);
+        date.setHours(23, 59, 59, 999);
+        dueDate = date.toISOString();
+      }
+    }
+
+    // Try to strip time references from title
+    let title = text.replace(/(\d{1,2}):(\d{2})\s*(am|pm)?/gi, '')
+                    .replace(/(\d{1,2})\s*(am|pm)/gi, '')
+                    .replace(/(today|tomorrow|urgent|asap|critical|important|high|low|someday)/gi, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+
+    if (!title) {
+      title = text;
+    }
+
+    return {
+      title: title.substring(0, 100),
+      description: 'Auto-parsed in fallback mode (Gemini quota limit reached)',
+      dueDate,
+      priority,
+      category: 'other',
+      estimatedMins: 30,
+      tags: ['fallback'],
+      isRecurring: false,
+      recurrenceRule: null,
+    };
   }
 }
 
