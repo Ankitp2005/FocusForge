@@ -109,8 +109,8 @@ export const useCreateTask = () => {
       addTask(tempTask);
 
       queryClient.getQueryCache().findAll({ queryKey: ['tasks'] }).forEach((query) => {
-        queryClient.setQueryData<TasksResponse>(query.queryKey, (old) => {
-          if (!old) return { tasks: [tempTask] };
+        queryClient.setQueryData<any>(query.queryKey, (old) => {
+          if (!old || !Array.isArray(old.tasks)) return old;
           return {
             ...old,
             tasks: [tempTask, ...old.tasks],
@@ -127,8 +127,8 @@ export const useCreateTask = () => {
       addRealTask(data.task);
 
       queryClient.getQueryCache().findAll({ queryKey: ['tasks'] }).forEach((query) => {
-        queryClient.setQueryData<TasksResponse>(query.queryKey, (old) => {
-          if (!old) return { tasks: [data.task] };
+        queryClient.setQueryData<any>(query.queryKey, (old) => {
+          if (!old || !Array.isArray(old.tasks)) return old;
           return {
             ...old,
             tasks: old.tasks.map((t) => (t.id === tempTaskId ? data.task : t)),
@@ -146,8 +146,8 @@ export const useCreateTask = () => {
         removeTask(tempTaskId);
 
         queryClient.getQueryCache().findAll({ queryKey: ['tasks'] }).forEach((query) => {
-          queryClient.setQueryData<TasksResponse>(query.queryKey, (old) => {
-            if (!old) return old;
+          queryClient.setQueryData<any>(query.queryKey, (old) => {
+            if (!old || !Array.isArray(old.tasks)) return old;
             return {
               ...old,
               tasks: old.tasks.filter((t) => t.id !== tempTaskId),
@@ -174,8 +174,8 @@ export const useCompleteTask = () => {
       
       // Instantly remove task from all active queries starting with ['tasks'] in React Query cache
       queryClient.getQueryCache().findAll({ queryKey: ['tasks'] }).forEach((query) => {
-        queryClient.setQueryData<TasksResponse>(query.queryKey, (old) => {
-          if (!old) return old;
+        queryClient.setQueryData<any>(query.queryKey, (old) => {
+          if (!old || !Array.isArray(old.tasks)) return old;
           return {
             ...old,
             tasks: old.tasks.filter((t) => t.id !== taskId),
@@ -227,8 +227,8 @@ export const useSnoozeTask = () => {
 
       // Instantly remove task from all active queries starting with ['tasks'] in React Query cache
       queryClient.getQueryCache().findAll({ queryKey: ['tasks'] }).forEach((query) => {
-        queryClient.setQueryData<TasksResponse>(query.queryKey, (old) => {
-          if (!old) return old;
+        queryClient.setQueryData<any>(query.queryKey, (old) => {
+          if (!old || !Array.isArray(old.tasks)) return old;
           return {
             ...old,
             tasks: old.tasks.filter((t) => t.id !== variables.taskId),
