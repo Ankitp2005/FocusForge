@@ -12,7 +12,7 @@ export async function sendReminderEmail(to: string, title: string, priority: str
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'FocusForge Alarms <alerts@resend.dev>',
+      from: 'FocusForge Alarms <onboarding@resend.dev>',
       to,
       subject: `🚨 Target Alarm: ${title}`,
       html: `
