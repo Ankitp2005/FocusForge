@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, format } from 'date-fns';
 import { fetchApi } from '@/lib/api';
 import { useUser } from '@/components/AuthProvider';
 import { MockupLayout } from '@/components/MockupLayout';
@@ -316,9 +316,9 @@ export const Goals = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-label font-black text-gray-400 uppercase mb-1">Target Date</label>
+                  <label className="block text-[10px] font-label font-black text-gray-400 uppercase mb-1">Target Date & Time</label>
                   <input
-                    type="date"
+                    type="datetime-local"
                     value={newTargetDate}
                     onChange={(e) => setNewTargetDate(e.target.value)}
                     className="w-full bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2.5 text-xs font-body focus:outline-none"
@@ -456,9 +456,16 @@ export const Goals = () => {
                   </div>
 
                   {/* Dates with red highlights */}
-                  <div className="flex gap-4 mt-2 text-[10px] font-label font-black select-none">
-                    <span className="text-red-500">{startsText}</span>
-                    <span className="text-red-500">{endsText}</span>
+                  <div className="flex justify-between items-center mt-2 text-[10px] font-label font-black select-none">
+                    <div className="flex gap-4">
+                      <span className="text-red-500">{startsText}</span>
+                      <span className="text-red-500">{endsText}</span>
+                    </div>
+                    {goal.targetDate && (
+                      <span className="text-gray-400 font-mono">
+                        DUE: {format(new Date(goal.targetDate), 'MMM d, h:mma').toUpperCase()}
+                      </span>
+                    )}
                   </div>
 
                   {/* Action Buttons: EDIT (Toggles Milestones Checklist) & SHARE (Purges) */}
