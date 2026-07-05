@@ -1,8 +1,16 @@
 name: Build Android APK
+
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+    paths:
+      # Only rebuild APK when native/config files actually change.
+      # Frontend & backend changes go live via Render — no APK rebuild needed.
+      - 'apps/web/android/**'
+      - 'apps/web/capacitor.config.ts'
+      - 'apps/web/package.json'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch: # Allow manual trigger any time from GitHub Actions tab
 
 jobs:
   build:
@@ -45,3 +53,5 @@ jobs:
         with:
           name: focusforge-debug-apk
           path: apps/web/android/app/build/outputs/apk/debug/app-debug.apk
+          # Artifact kept for 30 days so you can always download the latest stable APK
+          retention-days: 30
