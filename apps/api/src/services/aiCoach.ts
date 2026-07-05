@@ -39,7 +39,7 @@ const geminiTools: any = [
           properties: {
             title: { type: SchemaType.STRING },
             description: { type: SchemaType.STRING },
-            dueDate: { type: SchemaType.STRING, description: 'ISO8601 datetime' },
+            dueDate: { type: SchemaType.STRING, description: 'ISO8601 datetime string. IMPORTANT: Specify the offset (e.g., YYYY-MM-DDTHH:mm:ss+05:30) or convert to UTC correctly based on the user\'s local time.' },
             priority: { type: SchemaType.STRING, enum: ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'], format: 'enum' },
             category: { type: SchemaType.STRING },
             estimatedMins: { type: SchemaType.INTEGER },
@@ -67,7 +67,7 @@ const geminiTools: any = [
           properties: {
             taskId: { type: SchemaType.STRING },
             title: { type: SchemaType.STRING },
-            dueDate: { type: SchemaType.STRING },
+            dueDate: { type: SchemaType.STRING, description: 'ISO8601 datetime string. IMPORTANT: Specify the offset (e.g., YYYY-MM-DDTHH:mm:ss+05:30) or convert to UTC correctly based on the user\'s local time.' },
             priority: { type: SchemaType.STRING, enum: ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'], format: 'enum' },
             status: { type: SchemaType.STRING, enum: ['PENDING', 'IN_PROGRESS', 'SNOOZED'], format: 'enum' },
             estimatedMins: { type: SchemaType.INTEGER },
@@ -82,7 +82,7 @@ const geminiTools: any = [
           required: ['taskId', 'snoozeUntil'],
           properties: {
             taskId: { type: SchemaType.STRING },
-            snoozeUntil: { type: SchemaType.STRING, description: 'ISO8601 datetime' },
+            snoozeUntil: { type: SchemaType.STRING, description: 'ISO8601 datetime string. IMPORTANT: Specify the offset (e.g., YYYY-MM-DDTHH:mm:ss+05:30) or convert to UTC correctly based on the user\'s local time.' },
             reason: { type: SchemaType.STRING, description: 'Why it\'s being snoozed' },
           },
         },
@@ -107,7 +107,7 @@ const geminiTools: any = [
           required: ['taskId', 'startTime', 'durationMins'],
           properties: {
             taskId: { type: SchemaType.STRING },
-            startTime: { type: SchemaType.STRING, description: 'ISO8601 datetime' },
+            startTime: { type: SchemaType.STRING, description: 'ISO8601 datetime string. IMPORTANT: Specify the offset (e.g., YYYY-MM-DDTHH:mm:ss+05:30) or convert to UTC correctly based on the user\'s local time.' },
             durationMins: { type: SchemaType.INTEGER },
           },
         },
@@ -529,7 +529,8 @@ Your capabilities (use tools proactively):
 Current user context:
 - Name: ${user.name}
 - Timezone: ${user.timezone}
-- Current time: ${new Date().toISOString()}
+- Current server time (UTC): ${new Date().toISOString()}
+- User current local time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
 - Plan: ${user.plan}
 - Work hours: ${prefs?.workStartHour ?? 9}:00 – ${prefs?.workEndHour ?? 18}:00
 - Productivity style: ${prefs?.productivityStyle || 'balanced'}

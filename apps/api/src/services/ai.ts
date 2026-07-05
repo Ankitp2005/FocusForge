@@ -62,6 +62,7 @@ export async function parseTaskWithAI(text: string, timezone: string): Promise<A
   }
 
   const currentDateTime = new Date().toISOString();
+  const userLocalDateTime = new Date().toLocaleString('en-US', { timeZone: timezone });
   
   const prompt = `
 You are a task parsing engine. Convert natural language task descriptions into structured task data.
@@ -70,7 +71,8 @@ Task: "${text}"
 
 Extract and return structured task data according to the schema.
 Rules:
-- Current date/time: ${currentDateTime} (timezone: ${timezone})
+- Current server time (UTC): ${currentDateTime}
+- User current local time: ${userLocalDateTime} (timezone: ${timezone})
 - If a relative date is mentioned ("tomorrow", "next Friday"), convert to absolute date
 - If no time is specified for dueDate, set to end of that day (23:59)
 - Priority inference:
@@ -91,7 +93,7 @@ Rules:
           properties: {
             title: { type: SchemaType.STRING, description: 'concise, action-oriented, max 100 chars' },
             description: { type: SchemaType.STRING, description: 'any additional context' },
-            dueDate: { type: SchemaType.STRING, description: 'ISO8601 string or null' },
+            dueDate: { type: SchemaType.STRING, description: 'ISO8601 string or null. IMPORTANT: Specify the offset (e.g. YYYY-MM-DDTHH:mm:ss+05:30) or convert to UTC correctly based on the user\'s local time.' },
             priority: { type: SchemaType.STRING, enum: ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'], format: 'enum' },
             category: { type: SchemaType.STRING, enum: ['work', 'personal', 'study', 'health', 'finance', 'other'], format: 'enum' },
             estimatedMins: { type: SchemaType.INTEGER, description: 'realistic estimate or null' },
