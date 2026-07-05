@@ -69,15 +69,14 @@ function AppContent() {
             // Android 8.0+ requires registering a notification channel 
             // with high importance (5) to enable sound, vibration, and banner alerts.
             await LocalNotifications.createChannel({
-              id: 'focusforge-alarms',
+              id: 'focusforge-sound-alarms',
               name: 'Task Alarms',
               description: 'Urgent alarms and reminders for scheduled tasks',
               importance: 5, // 5 = Maximum importance (heads-up banner, sound, vibration)
-              sound: 'default',
               visibility: 1, // Visible on lockscreen
               vibration: true,
             });
-            console.log('[Notification] Channel focusforge-alarms created successfully');
+            console.log('[Notification] Channel focusforge-sound-alarms created successfully');
           } catch (err) {
             console.warn('[Notification] Failed to create notification channel:', err);
           }
@@ -165,13 +164,12 @@ function AppContent() {
                 id: Math.floor(Math.random() * 100000),
                 title: `🚨 ${reminder.priority} PRIORITY — FOCUSFORGE`,
                 body: reminder.message || `"${reminder.title}" requires your immediate attention.`,
-                sound: 'default',
                 // Extra data carried into the notification tap handler
                 extra: {
                   reminderId: reminder.reminderId,
                   taskId: reminder.taskId,
                 },
-                channelId: 'focusforge-alarms',
+                channelId: 'focusforge-sound-alarms',
               },
             ],
           });
