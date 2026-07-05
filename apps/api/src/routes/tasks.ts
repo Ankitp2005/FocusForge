@@ -252,7 +252,7 @@ router.post('/', async (req, res, next) => {
         await reminderQueue.add(
           'send-reminder',
           { reminderId: reminder.id },
-          { delay, jobId: `reminder:${reminder.id}` }
+          { delay, jobId: `reminder-${reminder.id}` }
         );
       }
     }
@@ -260,7 +260,7 @@ router.post('/', async (req, res, next) => {
     await prioritizationQueue.add(
       'recalc-priority',
       { userId: req.user!.id },
-      { jobId: `prioritize:${req.user!.id}:${Date.now()}` }
+      { jobId: `prioritize-${req.user!.id}-${Date.now()}` }
     );
 
     logAudit(req, {
@@ -344,7 +344,7 @@ router.patch('/:id', async (req, res, next) => {
         where: { taskId: task.id, status: 'PENDING' },
       });
       for (const oldRem of oldReminders) {
-        const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+        const job = await reminderQueue.getJob(`reminder-${oldRem.id}`);
         if (job) await job.remove();
       }
       await prisma.taskReminder.deleteMany({
@@ -375,7 +375,7 @@ router.patch('/:id', async (req, res, next) => {
           await reminderQueue.add(
             'send-reminder',
             { reminderId: reminder.id },
-            { delay, jobId: `reminder:${reminder.id}` }
+            { delay, jobId: `reminder-${reminder.id}` }
           );
         }
       }
@@ -384,7 +384,7 @@ router.patch('/:id', async (req, res, next) => {
       await prioritizationQueue.add(
         'recalc-priority',
         { userId: req.user!.id },
-        { jobId: `prioritize:${req.user!.id}:${Date.now()}` }
+        { jobId: `prioritize-${req.user!.id}-${Date.now()}` }
       );
     }
 
@@ -418,7 +418,7 @@ router.delete('/:id', async (req, res, next) => {
       where: { taskId: task.id, status: 'PENDING' },
     });
     for (const oldRem of oldReminders) {
-      const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+      const job = await reminderQueue.getJob(`reminder-${oldRem.id}`);
       if (job) await job.remove();
     }
     await prisma.taskReminder.deleteMany({
@@ -438,7 +438,7 @@ router.delete('/:id', async (req, res, next) => {
     await prioritizationQueue.add(
       'recalc-priority',
       { userId: req.user!.id },
-      { jobId: `prioritize:${req.user!.id}:${Date.now()}` }
+      { jobId: `prioritize-${req.user!.id}-${Date.now()}` }
     );
 
     logAudit(req, {
@@ -472,7 +472,7 @@ router.post('/:id/complete', async (req, res, next) => {
       where: { taskId: task.id, status: 'PENDING' },
     });
     for (const oldRem of oldReminders) {
-      const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+      const job = await reminderQueue.getJob(`reminder-${oldRem.id}`);
       if (job) await job.remove();
     }
     await prisma.taskReminder.deleteMany({
@@ -488,7 +488,7 @@ router.post('/:id/complete', async (req, res, next) => {
     await prioritizationQueue.add(
       'recalc-priority',
       { userId: req.user!.id },
-      { jobId: `prioritize:${req.user!.id}:${Date.now()}` }
+      { jobId: `prioritize-${req.user!.id}-${Date.now()}` }
     );
 
     logAudit(req, {
@@ -633,7 +633,7 @@ Return ONLY a valid ISO8601 datetime string, with no other text, markdown block,
       where: { taskId: task.id, status: 'PENDING' },
     });
     for (const oldRem of oldReminders) {
-      const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+      const job = await reminderQueue.getJob(`reminder-${oldRem.id}`);
       if (job) await job.remove();
     }
     await prisma.taskReminder.deleteMany({
@@ -662,7 +662,7 @@ Return ONLY a valid ISO8601 datetime string, with no other text, markdown block,
       await reminderQueue.add(
         'send-reminder',
         { reminderId: reminder.id },
-        { delay, jobId: `reminder:${reminder.id}` }
+        { delay, jobId: `reminder-${reminder.id}` }
       );
     }
 
@@ -670,7 +670,7 @@ Return ONLY a valid ISO8601 datetime string, with no other text, markdown block,
     await prioritizationQueue.add(
       'recalc-priority',
       { userId: req.user!.id },
-      { jobId: `prioritize:${req.user!.id}:${Date.now()}` }
+      { jobId: `prioritize-${req.user!.id}-${Date.now()}` }
     );
 
     logAudit(req, {

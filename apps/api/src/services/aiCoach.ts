@@ -195,7 +195,7 @@ async function executeTool(
             await reminderQueue.add(
               'send-reminder',
               { reminderId: reminder.id },
-              { delay, jobId: `reminder:${reminder.id}` }
+              { delay, jobId: `reminder-${reminder.id}` }
             );
           }
         }
@@ -204,7 +204,7 @@ async function executeTool(
         await prioritizationQueue.add(
           'recalc-priority',
           { userId },
-          { jobId: `prioritize:${userId}:${Date.now()}` }
+          { jobId: `prioritize-${userId}-${Date.now()}` }
         );
 
         emitToUser(userId, 'TASK_UPDATED', { type: 'create', taskId: task.id });
@@ -222,7 +222,7 @@ async function executeTool(
           where: { taskId: task.id, status: 'PENDING' },
         });
         for (const oldRem of oldReminders) {
-          const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+          const job = await reminderQueue.getJob(`reminder-${oldRem.id}`);
           if (job) await job.remove();
         }
         await prisma.taskReminder.deleteMany({
@@ -296,7 +296,7 @@ async function executeTool(
               await reminderQueue.add(
                 'send-reminder',
                 { reminderId: reminder.id },
-                { delay, jobId: `reminder:${reminder.id}` }
+                { delay, jobId: `reminder-${reminder.id}` }
               );
             }
           }
@@ -305,7 +305,7 @@ async function executeTool(
           await prioritizationQueue.add(
             'recalc-priority',
             { userId },
-            { jobId: `prioritize:${userId}:${Date.now()}` }
+            { jobId: `prioritize-${userId}-${Date.now()}` }
           );
         }
 
@@ -334,7 +334,7 @@ async function executeTool(
           where: { taskId: task.id, status: 'PENDING' },
         });
         for (const oldRem of oldReminders) {
-          const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+          const job = await reminderQueue.getJob(`reminder-${oldRem.id}`);
           if (job) await job.remove();
         }
         await prisma.taskReminder.deleteMany({
@@ -363,7 +363,7 @@ async function executeTool(
           await reminderQueue.add(
             'send-reminder',
             { reminderId: reminder.id },
-            { delay, jobId: `reminder:${reminder.id}` }
+            { delay, jobId: `reminder-${reminder.id}` }
           );
         }
 
@@ -371,7 +371,7 @@ async function executeTool(
         await prioritizationQueue.add(
           'recalc-priority',
           { userId },
-          { jobId: `prioritize:${userId}:${Date.now()}` }
+          { jobId: `prioritize-${userId}-${Date.now()}` }
         );
 
         emitToUser(userId, 'TASK_UPDATED', { type: 'snooze', taskId: task.id });
