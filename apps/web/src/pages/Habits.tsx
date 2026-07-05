@@ -182,34 +182,32 @@ export const Habits = () => {
   });
 
   return (
-    <MockupLayout activeTab="friends">
+    <MockupLayout activeTab="habits">
       <div className="flex flex-col gap-4 font-body select-none">
         
-        {/* Top green banner card exactly like "Can't find your friends? Invite them now!" */}
-        <div className="border-[3px] border-black rounded-[24px] bg-[#D4F087] p-4 flex items-center justify-between shadow-[3px_3px_0px_#000] gap-3">
-          <div className="flex-1">
-            <h3 className="font-display font-black text-[13px] text-[#1E3B06] uppercase leading-snug">
-              Can't find your habits?
+        {/* Top CTA banner — brutalist, accurate */}
+        <div className="border-[4px] border-black rounded-[10px] bg-[#FFD600] p-4 flex items-center justify-between shadow-[7px_7px_0px_#000] gap-3">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-display font-black text-[15px] text-black uppercase leading-snug">
+              🔥 Build Your Habits
             </h3>
-            <p className="text-[10px] text-[#1E3B06]/85 font-semibold leading-none mt-1">
-              Build your disciplines now!
+            <p className="text-[10px] text-black/70 font-black leading-none mt-1 uppercase tracking-wider">
+              Track daily disciplines &amp; build streaks
             </p>
           </div>
           
           <button
             onClick={() => setShowAddForm((prev) => !prev)}
-            className="px-4 py-2 border-[2px] border-black bg-[#FFD600] text-black font-display font-black text-[11px] uppercase rounded-xl shadow-[2px_2px_0px_#000] hover:bg-black hover:text-[#FFD600] cursor-pointer transition-colors shrink-0 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+            className="px-4 py-2.5 border-[3px] border-black bg-black text-[#FFD600] font-display font-black text-[11px] uppercase rounded-[8px] shadow-[3px_3px_0px_#FFD600] hover:bg-white hover:text-black cursor-pointer transition-colors shrink-0 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
           >
-            CREATE
+            + CREATE
           </button>
         </div>
 
-        {/* Dynamic Add Form */}
+        {/* Add Habit Form */}
         {showAddForm && (
-          <div className="border-[3px] border-black rounded-[24px] p-5 bg-white shadow-[4px_4px_0px_#000] animate-in fade-in slide-in-from-top-4 duration-200">
-            <h3 className="font-display font-black text-sm uppercase border-b border-gray-100 pb-2 mb-3">
-              Configure Habit
-            </h3>
+          <div className="border-[4px] border-black rounded-[10px] p-5 bg-white shadow-[7px_7px_0px_#000] animate-slide-up">
+            <h3 className="font-display font-black text-sm uppercase border-b-[3px] border-black pb-3 mb-4 tracking-wider">Configure Habit</h3>
             <form onSubmit={handleCreateHabit} className="space-y-3">
               <div>
                 <label className="block text-[10px] font-label font-black text-gray-400 uppercase mb-1">Habit Title</label>
@@ -271,11 +269,12 @@ export const Habits = () => {
           />
         </div>
 
-        {/* Incomplete Habits Section (styled like "Received Requests") */}
+        {/* Active Habits Section */}
         <div className="flex flex-col gap-3 mt-1">
-          <span className="font-display font-black text-xs uppercase text-black/80 tracking-wider">
-            Received Requests ({incompleteHabits.length})
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-display font-black text-xs uppercase text-black tracking-wider">🔥 Active Today</span>
+            <span className="bg-[#FFD600] text-black border-[2px] border-black px-2 py-0.5 rounded-[4px] text-[9px] font-black shadow-[2px_2px_0px_#000]">{incompleteHabits.length}</span>
+          </div>
           
           {isLoading ? (
             <div className="text-center font-display font-bold text-xs tracking-widest py-8">SCANNING ENGINE...</div>
@@ -334,11 +333,12 @@ export const Habits = () => {
           )}
         </div>
 
-        {/* Completed Habits Section (styled like "Sent Requests") */}
+        {/* Completed Habits Section */}
         <div className="flex flex-col gap-3 mt-2">
-          <span className="font-display font-black text-xs uppercase text-black/80 tracking-wider">
-            Sent Requests ({completedHabits.length})
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-display font-black text-xs uppercase text-black tracking-wider">✅ Done Today</span>
+            <span className="bg-[#C3EE52] text-black border-[2px] border-black px-2 py-0.5 rounded-[4px] text-[9px] font-black shadow-[2px_2px_0px_#000]">{completedHabits.length}</span>
+          </div>
           
           {completedHabits.length === 0 ? (
             <div className="text-center font-display font-black text-sm border-[4px] border-black py-10 rounded-[10px] bg-white shadow-[7px_7px_0px_#000] uppercase tracking-wider">

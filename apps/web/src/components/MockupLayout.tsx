@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/components/AuthProvider';
-import { Trophy, Home, Users, Calendar, Edit3, Sparkles } from 'lucide-react';
+import { Trophy, Home, Calendar, Edit3, Flame, Sparkles } from 'lucide-react';
 
 interface MockupLayoutProps {
   children: React.ReactNode;
-  activeTab: 'challenges' | 'home' | 'friends' | 'calendar' | 'coach';
+  activeTab: 'challenges' | 'home' | 'habits' | 'calendar' | 'coach';
   floatingButton?: React.ReactNode;
 }
 
@@ -21,7 +21,7 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
     { id: 'challenges' as const, label: 'Challenges', path: '/goals', icon: Trophy },
     { id: 'home' as const, label: 'Home', path: '/today', icon: Home },
     { id: 'coach' as const, label: 'AI Coach', path: '/coach', icon: Sparkles },
-    { id: 'friends' as const, label: 'Friends', path: '/habits', icon: Users },
+    { id: 'habits' as const, label: 'Habits', path: '/habits', icon: Flame },
     { id: 'calendar' as const, label: 'Calendar', path: '/calendar', icon: Calendar },
   ];
 
@@ -40,17 +40,17 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
             </div>
             
             {/* User Details */}
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="font-display font-black text-md leading-tight text-[#0A0A0A]">* {fullName}</span>
-                <span className="bg-[#FFD600] text-[#0A0A0A] border-[2px] border-black px-2 py-0.5 rounded-[4px] text-[9px] font-black tracking-wider leading-none shadow-[2px_2px_0px_#000]">
-                  @{username}
-                </span>
-              </div>
-              <span className="text-[10px] font-label font-black text-black/60 leading-none mt-1 tracking-wide uppercase">
-                Let's grow together!
+          <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+            <div className="flex items-center gap-1.5 flex-nowrap overflow-hidden">
+              <span className="font-display font-black text-[13px] leading-tight text-[#0A0A0A] truncate min-w-0 shrink">* {fullName}</span>
+              <span className="bg-[#FFD600] text-[#0A0A0A] border-[2px] border-black px-1.5 py-0.5 rounded-[4px] text-[8px] font-black tracking-wide leading-none shadow-[2px_2px_0px_#000] shrink-0 whitespace-nowrap">
+                @{username}
               </span>
             </div>
+            <span className="text-[9px] font-label font-black text-black/60 leading-none mt-1 tracking-wide uppercase truncate">
+              Let's grow together!
+            </span>
+          </div>
           </div>
 
           {/* Edit button — sharper, more brutalist */}
