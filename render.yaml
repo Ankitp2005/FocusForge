@@ -5,6 +5,7 @@ services:
     env: node
     plan: free
     autoDeploy: true
+    branch: main
     buildCommand: NODE_ENV=development npm install && npm run build
     startCommand: npx prisma migrate deploy --schema=apps/api/prisma/schema.prisma && npm run start:prod
     envVars:
@@ -39,6 +40,7 @@ services:
     name: focusforge-frontend
     env: static
     autoDeploy: true
+    branch: main
     buildCommand: NODE_ENV=development npm install && npm run build --workspace=apps/web
     staticPublishPath: apps/web/dist
     routes:
