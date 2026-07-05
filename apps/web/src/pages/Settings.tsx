@@ -263,7 +263,10 @@ export const Settings = () => {
                 <input
                   type="number"
                   value={preferredFocusSessionMins}
-                  onChange={(e) => setPreferredFocusSessionMins(parseInt(e.target.value) || 25)}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value);
+                    setPreferredFocusSessionMins(isNaN(val) ? 25 : val);
+                  }}
                   className="w-full bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2 text-xs focus:outline-none"
                 />
               </div>
@@ -274,7 +277,10 @@ export const Settings = () => {
                   min="0"
                   max="23"
                   value={workStartHour}
-                  onChange={(e) => setWorkStartHour(parseInt(e.target.value) || 9)}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value);
+                    setWorkStartHour(isNaN(val) ? 9 : val);
+                  }}
                   className="w-full bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2 text-xs focus:outline-none"
                 />
               </div>
@@ -285,7 +291,10 @@ export const Settings = () => {
                   min="0"
                   max="23"
                   value={workEndHour}
-                  onChange={(e) => setWorkEndHour(parseInt(e.target.value) || 18)}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value);
+                    setWorkEndHour(isNaN(val) ? 18 : val);
+                  }}
                   className="w-full bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2 text-xs focus:outline-none"
                 />
               </div>
@@ -298,7 +307,10 @@ export const Settings = () => {
                 min="0"
                 max="120"
                 value={reminderLeadTimeMinutes}
-                onChange={(e) => setReminderLeadTimeMinutes(parseInt(e.target.value) || 60)}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  setReminderLeadTimeMinutes(isNaN(val) ? 0 : val);
+                }}
                 className="w-full bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2 text-xs focus:outline-none"
               />
               <p className="text-[9px] text-gray-400 mt-0.5">How many mins before due date to alert you</p>
