@@ -273,7 +273,7 @@ export const Habits = () => {
 
         {/* Incomplete Habits Section (styled like "Received Requests") */}
         <div className="flex flex-col gap-3 mt-1">
-          <span className="font-display font-black text-xs uppercase text-gray-400 tracking-wider">
+          <span className="font-display font-black text-xs uppercase text-black/80 tracking-wider">
             Received Requests ({incompleteHabits.length})
           </span>
           
@@ -335,7 +335,7 @@ export const Habits = () => {
 
         {/* Completed Habits Section (styled like "Sent Requests") */}
         <div className="flex flex-col gap-3 mt-2">
-          <span className="font-display font-black text-xs uppercase text-gray-400 tracking-wider">
+          <span className="font-display font-black text-xs uppercase text-black/80 tracking-wider">
             Sent Requests ({completedHabits.length})
           </span>
           

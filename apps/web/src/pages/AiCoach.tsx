@@ -146,7 +146,7 @@ export const AiCoach = () => {
         {/* Back Link */}
         <button 
           onClick={() => navigate('/today')}
-          className="flex items-center gap-1.5 text-xs font-label font-black text-gray-500 hover:text-black cursor-pointer uppercase pb-1 select-none"
+          className="flex items-center gap-1.5 text-xs font-label font-black text-black hover:text-black/80 cursor-pointer uppercase pb-1 select-none"
         >
           <ChevronLeft className="w-4 h-4" />
           <span>Back to focus cockpit</span>

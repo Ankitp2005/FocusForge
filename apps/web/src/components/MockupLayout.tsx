@@ -48,7 +48,7 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
                   @{username}
                 </span>
               </div>
-              <span className="text-[11px] font-label font-bold text-[#A09E96] leading-none mt-1">
+              <span className="text-[11px] font-label font-bold text-black/75 leading-none mt-1">
                 Let's grow together!
               </span>
             </div>

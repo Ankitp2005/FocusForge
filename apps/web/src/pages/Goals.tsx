@@ -256,12 +256,12 @@ export const Goals = () => {
                 key={tab}
                 onClick={() => setActiveFilterTab(tab)}
                 className={`py-1 relative px-0.5 whitespace-nowrap cursor-pointer transition-colors ${
-                  active ? 'text-black font-black' : 'text-gray-400 hover:text-black'
+                  active ? 'text-black font-black' : 'text-black/60 hover:text-black'
                 }`}
               >
                 {tab}
                 {active && (
-                  <span className="absolute bottom-[-5px] left-0 right-0 h-[3.5px] bg-[#FFD600] rounded-full" />
+                  <span className="absolute bottom-[-5px] left-0 right-0 h-[3.5px] bg-black rounded-full" />
                 )}
               </button>
             );
