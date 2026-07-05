@@ -3,7 +3,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MockupLayout } from '@/components/MockupLayout';
 import { env } from '@/lib/env';
-import { ChevronLeft, Mic, MicOff, Sparkles } from 'lucide-react';
+import { ChevronLeft, Mic, MicOff } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
