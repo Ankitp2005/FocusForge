@@ -12,9 +12,9 @@ import { TaskDetailsModal } from '@/components/TaskDetailsModal';
 const StarRating = ({ priority }: { priority: string }) => {
   const starsCount = priority === 'CRITICAL' ? 5 : priority === 'HIGH' ? 4 : priority === 'MEDIUM' ? 3 : 2;
   return (
-    <div className="flex gap-0.5 text-[#FFD600] text-sm select-none">
+    <div className="flex gap-0.5 select-none">
       {Array.from({ length: 5 }).map((_, idx) => (
-        <span key={idx}>{idx < starsCount ? '★' : '☆'}</span>
+        <span key={idx} className={idx < starsCount ? 'text-black' : 'text-black/20'}>{idx < starsCount ? '★' : '☆'}</span>
       ))}
     </div>
   );
@@ -188,9 +188,9 @@ export const Today = () => {
             <div className="flex items-center justify-between mb-2">
               <button
                 onClick={() => setSelectedTaskId(focusTask.id)}
-                className="text-[10px] font-label font-black uppercase text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-[10px] font-label font-black uppercase tracking-widest border-[2px] border-black px-2.5 py-1 rounded-full bg-[#FAF7F2] shadow-[1px_1px_0px_#000] hover:bg-black hover:text-white transition-colors active:translate-x-[1px] active:translate-y-[1px] active:shadow-none flex items-center gap-1 cursor-pointer"
               >
-                <span>SPECIFICATIONS 🔍</span>
+                <span>SPECS 🔍</span>
               </button>
               <StarRating priority={focusTask.priority} />
             </div>
@@ -201,18 +201,18 @@ export const Today = () => {
             </h2>
 
             {/* Author Block inside the Card */}
-            <div className="flex items-center gap-2.5 p-2 bg-[#FAF7F2] rounded-2xl border-2 border-black/10 mb-4 select-none">
+            <div className="flex items-center gap-2.5 p-2 bg-[#FAF7F2] rounded-2xl border-[2px] border-black mb-4 select-none shadow-[1px_1px_0px_#000]">
               <div className="w-8 h-8 rounded-full border-[1.5px] border-black overflow-hidden bg-white shrink-0">
                 <img src={imageUrl} alt="Avatar" className="w-full h-full object-cover scale-105" />
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-black text-[12px] leading-tight text-[#0A0A0A]">{fullName}</span>
-                <span className="text-[#1E3B06] font-semibold text-[10px] leading-none">@{username}</span>
+                <span className="text-black/50 font-black text-[10px] leading-none font-label tracking-tight">@{username}</span>
               </div>
             </div>
 
             {/* Mock stats */}
-            <div className="flex justify-between items-center text-[10px] font-label font-black text-gray-400 uppercase tracking-wide border-b border-gray-100 pb-3 mb-4 select-none">
+            <div className="flex justify-between items-center text-[10px] font-label font-black text-black/60 uppercase tracking-widest border-b-[2px] border-black/10 pb-3 mb-4 select-none">
               <span>0/1 Participants</span>
               <span>0 Submissions</span>
             </div>
@@ -317,27 +317,27 @@ export const Today = () => {
             <button
               onClick={handleGeneratePlan}
               disabled={isPlanning}
-              className="w-full py-5 border-[3.5px] border-dashed border-gray-200 hover:border-black rounded-2xl text-gray-400 hover:text-black font-label font-black text-[11px] uppercase tracking-wider text-center transition-colors flex flex-col items-center justify-center gap-1.5"
+              className="w-full py-5 border-[3px] border-black hover:border-black rounded-2xl bg-[#FAF7F2] hover:bg-[#FFD600] text-black/60 hover:text-black font-label font-black text-[11px] uppercase tracking-wider text-center transition-colors flex flex-col items-center justify-center gap-1.5 shadow-[2px_2px_0px_#000] hover:shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
             >
               {isPlanning ? (
                 <div className="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full" />
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5 text-[#FFD600]" />
+                  <Sparkles className="w-5 h-5" />
                   <span>GENERATE PLAN</span>
                 </>
               )}
             </button>
           ) : (
-            <div className="space-y-3 relative pl-4 border-l-2 border-black/10 my-2">
+            <div className="space-y-3 relative pl-4 border-l-[3px] border-black/20 my-2">
               {dailyPlan.timeBlocks.slice(0, 3).map((block: any, idx: number) => (
                 <div key={idx} className="relative">
-                  <div className="border-[2px] border-black p-2 bg-[#FAF7F2] rounded-xl shadow-[2px_2px_0px_#000] text-[11px]">
-                    <div className="flex justify-between items-center text-[9px] text-gray-400 font-bold">
-                      <span className="uppercase text-green-700 bg-green-50 px-1 border border-green-200 rounded">{block.type}</span>
-                      <span>{block.start} - {block.end}</span>
+                  <div className="border-[2px] border-black p-2.5 bg-[#FAF7F2] rounded-xl shadow-[2px_2px_0px_#000] text-[11px]">
+                    <div className="flex justify-between items-center text-[9px] font-label font-black">
+                      <span className="uppercase text-black bg-[#C3EE52] px-1.5 py-0.5 border-[1.5px] border-black rounded tracking-wider">{block.type}</span>
+                      <span className="text-black/60 font-mono">{block.start} - {block.end}</span>
                     </div>
-                    <p className="font-bold text-black leading-tight mt-1 truncate">{block.title}</p>
+                    <p className="font-bold text-black leading-tight mt-1.5 truncate">{block.title}</p>
                   </div>
                 </div>
               ))}
@@ -356,15 +356,15 @@ export const Today = () => {
                 <div
                   key={task.id}
                   onClick={() => setSelectedTaskId(task.id)}
-                  className="border-[2px] border-black p-3 bg-[#FAF7F2] hover:bg-white rounded-xl shadow-[2px_2px_0px_#000] transition-all flex items-center justify-between cursor-pointer group text-[11px]"
+                  className="border-[2px] border-black p-3 bg-[#FAF7F2] hover:bg-[#FFD600] rounded-xl shadow-[2px_2px_0px_#000] transition-all flex items-center justify-between cursor-pointer group text-[11px] hover:shadow-[3px_3px_0px_#000] brutal-card-hover"
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="text-[8px] font-label font-bold text-red-500 uppercase tracking-widest block">
+                    <span className="text-[8px] font-label font-black text-[#FF4B55] uppercase tracking-widest block">
                       #{idx + 2} {task.priority}
                     </span>
-                    <p className="font-bold text-black truncate group-hover:text-blue-600 transition-colors mt-0.5">{task.title}</p>
+                    <p className="font-bold text-black truncate mt-0.5">{task.title}</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400 shrink-0 ml-2" />
+                  <ChevronRight className="w-4 h-4 text-black/40 shrink-0 ml-2 group-hover:text-black transition-colors" />
                 </div>
               ))}
             </div>

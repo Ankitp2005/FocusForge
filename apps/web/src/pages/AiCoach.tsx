@@ -120,21 +120,21 @@ export const AiCoach = () => {
 
   // Full-width chat input form passed to floatingButton layout prop
   const chatInput = (
-    <form onSubmit={handleSend} className="flex gap-2 w-full bg-white p-2 border-[2.5px] border-black rounded-[18px] shadow-[3px_3px_0px_#000] items-center">
+    <form onSubmit={handleSend} className="flex gap-2 w-full bg-white p-2 border-[2.5px] border-black rounded-[18px] shadow-[4px_4px_0px_#000] items-center">
       <input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         disabled={isPending}
-        className="flex-1 bg-[#FAF7F2] border border-gray-300 rounded-lg p-2.5 text-xs font-body focus:outline-none focus:border-[#FFD600] placeholder-gray-400"
-        placeholder="Ask AI Coach..."
+        className="flex-1 bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2.5 text-xs font-body font-bold focus:outline-none focus:border-[#FFD600] placeholder-black/30"
+        placeholder="ASK THE COACH..."
       />
       <button
         type="submit"
         disabled={isPending || !input.trim()}
-        className="px-3.5 py-2.5 bg-[#FFD600] border-2 border-black rounded-xl text-xs font-label font-black shadow-[1.5px_1.5px_0px_#000] hover:bg-black hover:text-[#FFD600] cursor-pointer shrink-0 disabled:opacity-50 transition-colors"
+        className="px-4 py-2.5 bg-[#FFD600] border-[2px] border-black rounded-xl text-xs font-label font-black shadow-[2px_2px_0px_#000] hover:bg-black hover:text-[#FFD600] cursor-pointer shrink-0 disabled:opacity-30 transition-colors active:translate-x-[1px] active:translate-y-[1px] active:shadow-none uppercase tracking-wider"
       >
-        SEND
+        {isPending ? '...' : 'SEND'}
       </button>
     </form>
   );
@@ -143,13 +143,13 @@ export const AiCoach = () => {
     <MockupLayout activeTab="coach" floatingButton={chatInput}>
       <div className="flex flex-col gap-4 font-body">
         
-        {/* Back Link */}
+        {/* Back Link - brutalist pill button */}
         <button 
           onClick={() => navigate('/today')}
-          className="flex items-center gap-1.5 text-xs font-label font-black text-black hover:text-black/80 cursor-pointer uppercase pb-1 select-none"
+          className="self-start flex items-center gap-1.5 text-[10px] font-label font-black uppercase tracking-widest border-[2.5px] border-black bg-white px-3 py-1.5 rounded-full shadow-[2px_2px_0px_#000] hover:bg-black hover:text-white transition-colors active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer"
         >
-          <ChevronLeft className="w-4 h-4" />
-          <span>Back to focus cockpit</span>
+          <ChevronLeft className="w-3.5 h-3.5" />
+          <span>Back to Focus Cockpit</span>
         </button>
 
         {/* Chat message dialog list */}
@@ -159,23 +159,27 @@ export const AiCoach = () => {
             return (
               <div
                 key={msg.id}
-                className={`p-3.5 border-[2.5px] border-black rounded-[20px] shadow-[3px_3px_0px_#000] ${
-                  isUser ? 'bg-[#FAF7F2] self-end max-w-[85%]' : 'bg-white self-start max-w-[85%]'
-                } ${msg.isLoading ? 'opacity-50 animate-pulse' : ''}`}
+                className={`border-[2.5px] border-black rounded-[20px] shadow-[3px_3px_0px_#000] ${
+                  isUser 
+                    ? 'bg-[#0A0A0A] text-white self-end max-w-[85%] p-3.5' 
+                    : 'bg-white self-start max-w-[88%] p-3.5'
+                } ${msg.isLoading ? 'opacity-60 animate-pulse' : ''}`}
               >
-                <span className={`font-label font-black text-[9px] uppercase tracking-wider block mb-1 select-none ${
-                  isUser ? 'text-gray-400' : 'text-[#FF4B55]'
+                <span className={`font-label font-black text-[9px] uppercase tracking-widest block mb-1.5 select-none ${
+                  isUser ? 'text-white/50' : 'text-[#FF4B55]'
                 }`}>
-                  {isUser ? 'YOU' : 'AI COACH'}
+                  {isUser ? 'YOU' : 'AI COACH ⚡'}
                 </span>
-                <p className="text-xs leading-relaxed whitespace-pre-wrap text-black font-bold">
+                <p className={`text-xs leading-relaxed whitespace-pre-wrap font-bold ${
+                  isUser ? 'text-white' : 'text-black'
+                }`}>
                   {msg.content}
-                  {msg.isLoading && <span className="animate-pulse">_</span>}
+                  {msg.isLoading && <span className="animate-pulse font-mono text-[#FFD600]">▌</span>}
                 </p>
                 
                 {/* Tool Calls inside the bubble */}
                 {msg.toolsUsed && msg.toolsUsed.length > 0 && (
-                  <div className="mt-2.5 pt-2 border-t border-black/5 flex flex-wrap gap-1.5 select-none">
+                  <div className="mt-2.5 pt-2 border-t border-black/10 flex flex-wrap gap-1.5 select-none">
                     {msg.toolsUsed.map((tool, i) => (
                       <button
                         key={i}
@@ -187,7 +191,7 @@ export const AiCoach = () => {
                             navigate('/today');
                           }
                         }}
-                        className="font-label text-[8px] text-blue-700 bg-blue-50 hover:bg-black hover:text-white border border-blue-200 px-2 py-1 uppercase rounded-md tracking-wider cursor-pointer"
+                        className="font-label text-[8px] text-black bg-[#FFD600] border-[1.5px] border-black px-2 py-0.5 uppercase rounded tracking-wider cursor-pointer hover:bg-black hover:text-[#FFD600] shadow-[1px_1px_0px_#000] active:shadow-none active:translate-x-[1px] active:translate-y-[1px] font-black transition-colors"
                       >
                         ⚙ {tool}
                       </button>

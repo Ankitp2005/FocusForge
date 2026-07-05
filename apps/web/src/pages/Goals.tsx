@@ -283,7 +283,7 @@ export const Goals = () => {
 
             <form onSubmit={handleCreateGoal} className="space-y-3">
               <div>
-                <label className="block text-[10px] font-label font-black text-gray-400 uppercase mb-1">Challenge Title</label>
+                <label className="block text-[10px] font-label font-black text-black/70 uppercase mb-1 tracking-wider">Challenge Title</label>
                 <input
                   type="text"
                   required
@@ -295,7 +295,7 @@ export const Goals = () => {
               </div>
 
               <div>
-                <label className="block text-[10px] font-label font-black text-gray-400 uppercase mb-1">Description</label>
+                <label className="block text-[10px] font-label font-black text-black/70 uppercase mb-1 tracking-wider">Description</label>
                 <textarea
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
@@ -387,8 +387,10 @@ export const Goals = () => {
             SCANNING CHALLENGES...
           </div>
         ) : filteredGoals.length === 0 ? (
-          <div className="text-center text-gray-400 font-body text-xs border-[3px] border-dashed border-gray-300 py-16 rounded-[24px] bg-white">
-            NO CHALLENGES FOUND IN THIS STATE
+          <div className="text-center font-display font-black text-sm border-[3px] border-black py-16 rounded-[24px] bg-white shadow-[4px_4px_0px_#000] uppercase tracking-wider">
+            <div className="text-4xl mb-3">🏆</div>
+            <div className="text-black">No challenges yet</div>
+            <div className="text-[10px] font-label font-bold text-black/50 mt-1 normal-case tracking-normal">Tap + to create your first challenge</div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -415,14 +417,14 @@ export const Goals = () => {
                   
                   {/* Difficulty label & Stars */}
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] font-label font-black text-gray-400 uppercase tracking-wide">Difficulty</span>
-                    <div className="flex text-[#FFD600] text-sm">
+                    <span className="text-[10px] font-label font-black text-black/60 uppercase tracking-widest">Difficulty</span>
+                    <div className="flex gap-0.5">
                       {Array.from({ length: 5 }).map((_, idx) => (
                         <Star 
                           key={idx} 
                           className="w-3.5 h-3.5" 
-                          fill={idx < starsCount ? '#FFD600' : 'none'} 
-                          stroke="#FFD600" 
+                          fill={idx < starsCount ? '#0A0A0A' : 'none'} 
+                          stroke="#0A0A0A" 
                         />
                       ))}
                     </div>
@@ -439,30 +441,30 @@ export const Goals = () => {
                   )}
 
                   {/* Creator Avatar Block */}
-                  <div className="flex items-center gap-2 mt-3 p-2 bg-[#FAF7F2] rounded-xl border-2 border-black/5 select-none">
-                    <div className="w-7 h-7 rounded-full border border-black overflow-hidden bg-white shrink-0">
+                  <div className="flex items-center gap-2 mt-3 p-2 bg-[#FAF7F2] rounded-xl border-[2px] border-black select-none">
+                    <div className="w-7 h-7 rounded-full border-[1.5px] border-black overflow-hidden bg-white shrink-0 shadow-[1px_1px_0px_#000]">
                       <img src={imageUrl} alt="Avatar" className="w-full h-full object-cover scale-105" />
                     </div>
                     <div className="flex flex-col">
                       <span className="font-display font-black text-[11px] leading-tight text-[#0A0A0A]">{fullName}</span>
-                      <span className="text-green-800 font-semibold text-[9px] leading-none">@{username}</span>
+                      <span className="text-[#0A0A0A]/60 font-black text-[9px] leading-none font-label tracking-tight">@{username}</span>
                     </div>
                   </div>
 
                   {/* Stats */}
-                  <div className="flex justify-between items-center mt-3 text-[10px] font-label font-black text-gray-400 uppercase border-b border-gray-100 pb-2.5">
+                  <div className="flex justify-between items-center mt-3 text-[10px] font-label font-black text-black/60 uppercase border-b-[2px] border-black/10 pb-2.5 tracking-wider">
                     <span>{completed}/{total} Milestones</span>
                     <span>0 Submissions</span>
                   </div>
 
                   {/* Dates with red highlights */}
                   <div className="flex justify-between items-center mt-2 text-[10px] font-label font-black select-none">
-                    <div className="flex gap-4">
-                      <span className="text-red-500">{startsText}</span>
-                      <span className="text-red-500">{endsText}</span>
+                    <div className="flex gap-3">
+                      <span className="text-[#FF4B55] font-black tracking-wide">{startsText}</span>
+                      <span className="text-[#FF4B55] font-black tracking-wide">{endsText}</span>
                     </div>
                     {goal.targetDate && (
-                      <span className="text-gray-400 font-mono">
+                      <span className="text-black/70 font-mono font-bold tracking-tight">
                         DUE: {format(new Date(goal.targetDate), 'MMM d, h:mma').toUpperCase()}
                       </span>
                     )}

@@ -280,8 +280,9 @@ export const Habits = () => {
           {isLoading ? (
             <div className="text-center font-display font-bold text-xs tracking-widest py-8">SCANNING ENGINE...</div>
           ) : incompleteHabits.length === 0 ? (
-            <div className="text-center text-gray-400 text-xs py-6 border-2 border-dashed border-gray-300 rounded-xl bg-white italic">
-              All disciplines completed for today!
+            <div className="text-center font-display font-black text-sm border-[3px] border-black py-10 rounded-[20px] bg-white shadow-[3px_3px_0px_#000] uppercase tracking-wider">
+              <div className="text-3xl mb-2">✅</div>
+              <div className="text-black text-xs">All disciplines done!</div>
             </div>
           ) : (
             <div className="space-y-3">
@@ -304,7 +305,7 @@ export const Habits = () => {
                           @{habit.frequency}
                         </span>
                       </div>
-                      <span className="text-[10px] font-label font-bold text-gray-400 block mt-1 leading-none">
+                      <span className="text-[10px] font-label font-black text-black/50 block mt-1 leading-none tracking-tight">
                         Streak: {habit.currentStreak} days • Record: {habit.longestStreak} days
                       </span>
                     </div>
@@ -314,7 +315,7 @@ export const Habits = () => {
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => handleDeleteHabit(habit.id)}
-                      className="text-[9px] font-label font-black text-red-500 uppercase hover:underline"
+                      className="text-[9px] font-label font-black text-[#FF4B55] uppercase border-[1.5px] border-[#FF4B55] px-2 py-1 rounded hover:bg-[#FF4B55] hover:text-white transition-colors"
                     >
                       Archive
                     </button>
@@ -340,8 +341,9 @@ export const Habits = () => {
           </span>
           
           {completedHabits.length === 0 ? (
-            <div className="text-center text-gray-400 text-xs py-6 border-2 border-dashed border-gray-300 rounded-xl bg-white italic">
-              No completed logs yet today.
+            <div className="text-center font-display font-black text-sm border-[3px] border-black py-10 rounded-[20px] bg-white shadow-[3px_3px_0px_#000] uppercase tracking-wider">
+              <div className="text-3xl mb-2">🎯</div>
+              <div className="text-black text-xs">No completions yet</div>
             </div>
           ) : (
             <div className="space-y-3">
@@ -359,11 +361,11 @@ export const Habits = () => {
                         <span className="font-display font-black text-[13px] leading-tight text-gray-500 line-through truncate">
                           {habit.title}
                         </span>
-                        <span className="bg-gray-200 text-gray-600 border border-gray-400 px-1.5 py-0.5 rounded-full text-[8px] font-bold tracking-tight leading-none uppercase shrink-0">
+                        <span className="bg-gray-100 text-black border-[1.5px] border-black px-1.5 py-0.5 rounded text-[8px] font-black tracking-tight leading-none uppercase shrink-0 line-through">
                           @{habit.frequency}
                         </span>
                       </div>
-                      <span className="text-[10px] font-label font-semibold text-gray-400 block mt-1 leading-none">
+                      <span className="text-[10px] font-label font-black text-black/50 block mt-1 leading-none tracking-tight">
                         Completed today! Streak: {habit.currentStreak} 🔥
                       </span>
                     </div>
@@ -371,11 +373,11 @@ export const Habits = () => {
 
                   <div className="flex items-center gap-2 shrink-0">
                     <button
-                      onClick={() => handleToggleToday(habit)}
-                      className="text-[9px] font-label font-bold text-gray-400 hover:underline"
-                    >
-                      Undo
-                    </button>
+                       onClick={() => handleToggleToday(habit)}
+                       className="text-[9px] font-label font-black text-black/50 uppercase border-[1.5px] border-black/30 px-2 py-1 rounded hover:bg-black hover:text-white transition-colors"
+                     >
+                       Undo
+                     </button>
                     {/* Circle icon on right showing completed status check */}
                     <div className="w-8 h-8 rounded-full border-[2.5px] border-black bg-[#C3EE52] flex items-center justify-center shadow-[1px_1px_0px_#000]">
                       <Check className="w-4 h-4 text-black" />

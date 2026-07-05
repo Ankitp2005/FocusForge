@@ -79,7 +79,7 @@ export const Calendar = () => {
           <div className="border-[3px] border-black rounded-[24px] p-6 text-center bg-white shadow-[4px_4px_0px_#000] flex flex-col items-center">
             <CalendarIcon className="w-14 h-14 text-[#4CD9E3] mb-4 animate-bounce mt-4" />
             <h2 className="font-display font-black text-xl tracking-tight uppercase mb-2">CONNECT YOUR REALITY</h2>
-            <p className="text-gray-500 text-xs leading-relaxed mb-6 max-w-sm">
+            <p className="text-black/60 text-xs leading-relaxed mb-6 max-w-sm font-body font-bold">
               Sync with Google Calendar to overlay your tasks directly onto your free time. FocusForge AI automatically schedules focus slots to prevent conflicts and maximize throughput.
             </p>
             <button
@@ -95,12 +95,12 @@ export const Calendar = () => {
             
             {/* Sync State Card */}
             <div className="border-[3px] border-black rounded-[24px] p-4 bg-white shadow-[4px_4px_0px_#000]">
-              <div className="flex justify-between items-start flex-wrap gap-2 pb-2.5 border-b border-gray-100">
+              <div className="flex justify-between items-start flex-wrap gap-2 pb-2.5 border-b-[2px] border-black/10">
                 <div>
-                  <span className="bg-[#EAFBF2] text-[#1E3B06] border border-[#47D185] px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider select-none inline-block">
+                  <span className="bg-[#C3EE52] text-black border-[2px] border-black px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider select-none inline-block shadow-[1.5px_1.5px_0px_#000]">
                     ● SYNC ACTIVE
                   </span>
-                  <p className="text-[11px] font-bold text-gray-500 mt-2 truncate max-w-[240px]">
+                  <p className="text-[11px] font-bold text-black/50 mt-2 truncate max-w-[240px] font-label tracking-tight">
                     User: {statusData.email}
                   </p>
                 </div>
@@ -125,7 +125,7 @@ export const Calendar = () => {
                 </div>
               </div>
               
-              <div className="flex items-center gap-1.5 mt-2.5 text-[9px] font-label font-bold text-gray-400 uppercase leading-none">
+              <div className="flex items-center gap-1.5 mt-2.5 text-[9px] font-label font-black text-black/50 uppercase leading-none tracking-wider">
                 <Info className="w-3.5 h-3.5" />
                 <span>Last Sync: {statusData.lastSyncedAt ? new Date(statusData.lastSyncedAt).toLocaleTimeString() : 'NEVER'}</span>
               </div>
@@ -151,7 +151,7 @@ export const Calendar = () => {
 
             {/* Timetable schedule grid overlay */}
             <div className="border-[3px] border-black rounded-[24px] p-4 bg-white shadow-[4px_4px_0px_#000]">
-              <span className="font-display font-black text-sm uppercase text-black block mb-3 border-b border-gray-100 pb-2">
+              <span className="font-display font-black text-sm uppercase text-black block mb-3 border-b-[2px] border-black/10 pb-2">
                 📅 TODAY'S SCHEDULE OVERLAY
               </span>
               
@@ -159,7 +159,7 @@ export const Calendar = () => {
                 {/* 9 AM to 5 PM list slots */}
                 {[9, 10, 11, 12, 13, 14, 15, 16, 17].map((hour) => (
                   <div key={hour} className="flex border-b border-gray-200 h-12 relative">
-                    <div className="w-12 border-r border-gray-200 flex items-start justify-center pt-1 font-mono text-[9px] text-gray-400 font-bold select-none bg-white">
+                    <div className="w-12 border-r border-black/10 flex items-start justify-center pt-1 font-mono text-[9px] text-black/40 font-bold select-none bg-white">
                       {hour}:00
                     </div>
                     <div className="flex-1 bg-transparent"></div>
@@ -224,8 +224,8 @@ export const Calendar = () => {
 
                 {events.length === 0 && (
                   <div className="absolute inset-0 flex items-center justify-center p-8 bg-transparent pointer-events-none select-none">
-                    <p className="font-body text-[10px] text-gray-400 font-bold uppercase tracking-wider text-center">
-                      No synchronized events logged.
+                    <p className="font-display font-black text-[11px] text-black/40 uppercase tracking-widest text-center">
+                      No events synchronized.
                     </p>
                   </div>
                 )}
@@ -233,9 +233,9 @@ export const Calendar = () => {
             </div>
 
             {/* Bottom info banner */}
-            <div className="border-[3px] border-black rounded-[20px] bg-[#FFFDE6] p-3 shadow-[3px_3px_0px_#000] flex gap-2 items-start">
+            <div className="border-[3px] border-black rounded-[20px] bg-[#FAF7F2] p-3 shadow-[3px_3px_0px_#000] flex gap-2 items-start">
               <Info className="w-4 h-4 text-black shrink-0 mt-0.5" />
-              <p className="text-[10px] font-body text-black leading-relaxed font-semibold">
+              <p className="text-[10px] font-body text-black/70 leading-relaxed font-bold">
                 AI Schedule Injections occur automatically in open slots between synchronized calendar blocks. Adjust parameters in Settings.
               </p>
             </div>

@@ -76,7 +76,7 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
           </div>
         )}
 
-        {/* Floating bottom menu matching reference */}
+        {/* Floating bottom menu */}
         <div className="absolute bottom-4 left-4 right-4 bg-white border-[3px] border-black rounded-[24px] shadow-[4px_4px_0px_#000] flex justify-around items-center py-2 px-1 z-20">
           {navItems.map((item) => {
             const active = activeTab === item.id;
@@ -85,17 +85,17 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
               <button
                 key={item.id}
                 onClick={() => navigate(item.path)}
-                className="relative py-2 px-1.5 flex flex-col items-center justify-center transition-all cursor-pointer group"
+                className="relative py-1.5 px-2 flex flex-col items-center justify-center transition-all cursor-pointer group"
               >
-                {/* Active marker blob */}
+                {/* Active marker - solid yellow rounded pill */}
                 {active && (
-                  <div className="absolute inset-0 w-full h-full nav-active-highlight z-0 pointer-events-none scale-110 animate-pulse" />
+                  <div className="absolute inset-0 w-full h-full bg-[#FFD600] border-[2px] border-black rounded-[14px] z-0 shadow-[2px_2px_0px_#000]" />
                 )}
                 
                 {/* Icon & Label */}
                 <div className="relative z-10 flex flex-col items-center gap-0.5">
-                  <Icon className={`w-5 h-5 transition-colors ${active ? 'text-black' : 'text-gray-500 group-hover:text-black'}`} />
-                  <span className={`text-[10px] font-label font-black transition-colors ${active ? 'text-black' : 'text-gray-500 group-hover:text-black'}`}>
+                  <Icon className={`w-4.5 h-4.5 transition-colors ${active ? 'text-black' : 'text-black/35 group-hover:text-black'}`} />
+                  <span className={`text-[9px] font-label font-black transition-colors tracking-wider uppercase ${active ? 'text-black' : 'text-black/35 group-hover:text-black'}`}>
                     {item.label}
                   </span>
                 </div>
