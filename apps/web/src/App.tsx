@@ -113,10 +113,12 @@ function AppContent() {
                 });
               }
             } else {
-              const path = url.pathname || url.hash.replace('#', '');
-              if (path) {
-                navigate(path);
+              let path = url.hostname + (url.pathname || '');
+              if (!path.startsWith('/')) {
+                path = '/' + path;
               }
+              const search = url.search || '';
+              navigate(path + search);
             }
           }
         } catch (e) {

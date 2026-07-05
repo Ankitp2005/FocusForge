@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchApi } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { Capacitor } from '@capacitor/core';
 
 export interface CalendarStatus {
   connected: boolean;
@@ -27,7 +28,7 @@ export const useCalendarStatus = () => {
 export const useConnectCalendar = () => {
   return useMutation({
     mutationFn: () =>
-      fetchApi<{ url: string }>('/calendar/connect', { method: 'POST' }),
+      fetchApi<{ url: string }>(`/calendar/connect?platform=${Capacitor.isNativePlatform() ? 'mobile' : 'web'}`, { method: 'POST' }),
     onSuccess: (data) => {
       // Redirect to Google OAuth screen
       window.location.href = data.url;

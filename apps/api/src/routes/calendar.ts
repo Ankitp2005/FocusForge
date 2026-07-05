@@ -53,8 +53,9 @@ router.get('/events', authenticate, async (req, res, next) => {
 
 // ─── POST /api/v1/calendar/connect ───────────────────────────────────────────
 router.post('/connect', authenticate, (req, res) => {
-  // Generate auth URL with state=userId to track who initiated
-  const url = getAuthUrl(req.user!.id);
+  const platform = req.query.platform === 'mobile' ? 'mobile' : 'web';
+  // Generate auth URL with state=userId:platform to track who initiated and what platform
+  const url = getAuthUrl(`${req.user!.id}:${platform}`);
   res.json({
     success: true,
     data: { url },
@@ -66,14 +67,22 @@ router.post('/connect', authenticate, (req, res) => {
 // because it's a browser redirect, not an API call with Bearer token.
 router.get('/callback', async (req, res, next) => {
   try {
-    const { code, state: userId, error } = req.query;
+    const { code, state, error } = req.query;
+    const stateStr = typeof state === 'string' ? state : '';
+    const [userId, platform] = stateStr.split(':');
 
     if (error) {
-      return res.redirect(`${env.APP_URL}/settings?error=calendar_oauth_failed`);
+      const targetUrl = platform === 'mobile'
+        ? `focusforge://settings?error=calendar_oauth_failed`
+        : `${env.APP_URL}/settings?error=calendar_oauth_failed`;
+      return res.redirect(targetUrl);
     }
 
-    if (!code || !userId || typeof code !== 'string' || typeof userId !== 'string') {
-      return res.redirect(`${env.APP_URL}/settings?error=invalid_oauth_request`);
+    if (!code || !userId || typeof code !== 'string') {
+      const targetUrl = platform === 'mobile'
+        ? `focusforge://settings?error=invalid_oauth_request`
+        : `${env.APP_URL}/settings?error=invalid_oauth_request`;
+      return res.redirect(targetUrl);
     }
 
     const { tokens, email } = await exchangeCodeForTokens(code);
@@ -102,10 +111,19 @@ router.get('/callback', async (req, res, next) => {
       },
     });
 
-    res.redirect(`${env.APP_URL}/calendar?success=calendar_connected`);
+    const successUrl = platform === 'mobile'
+      ? `focusforge://calendar?success=calendar_connected`
+      : `${env.APP_URL}/calendar?success=calendar_connected`;
+    res.redirect(successUrl);
   } catch (error) {
     console.error('OAuth Callback Error:', error);
-    res.redirect(`${env.APP_URL}/settings?error=calendar_oauth_failed`);
+    // Since we don't have platform in catch block if state split failed, default to standard URL
+    const stateStr = typeof req.query.state === 'string' ? req.query.state : '';
+    const [, platform] = stateStr.split(':');
+    const errorUrl = platform === 'mobile'
+      ? `focusforge://settings?error=calendar_oauth_failed`
+      : `${env.APP_URL}/settings?error=calendar_oauth_failed`;
+    res.redirect(errorUrl);
   }
 });
 
