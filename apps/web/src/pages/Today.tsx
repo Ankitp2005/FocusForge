@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useTasks, useCompleteTask, useUpdateTask } from '@/hooks/useTasks';
+import { useTasks, useCompleteTask, useUpdateTask, useCreateTask } from '@/hooks/useTasks';
 import { useUser } from '@/components/AuthProvider';
 import { MockupLayout } from '@/components/MockupLayout';
 import { fetchApi } from '@/lib/api';
 import toast from 'react-hot-toast';
-import { RotateCcw, Sparkles, ChevronRight } from 'lucide-react';
+import { RotateCcw, Sparkles, ChevronRight, Plus } from 'lucide-react';
 import { TaskDetailsModal } from '@/components/TaskDetailsModal';
 
 const StarRating = ({ priority }: { priority: string }) => {
@@ -30,6 +30,19 @@ export const Today = () => {
   const [isPlanning, setIsPlanning] = useState(false);
   const [submissionUrl, setSubmissionUrl] = useState('');
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [quickAdd, setQuickAdd] = useState('');
+  const createTask = useCreateTask();
+
+  const handleQuickAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickAdd.trim()) return;
+    try {
+      await createTask.mutateAsync({ rawInput: quickAdd, parseWithAI: true });
+      setQuickAdd('');
+    } catch (err) {
+      // Caught and displayed by mutation toast
+    }
+  };
 
   const handleGeneratePlan = async () => {
     setIsPlanning(true);
@@ -114,7 +127,40 @@ export const Today = () => {
   return (
     <MockupLayout activeTab="home">
       <div className="flex flex-col gap-4 font-body relative">
-
+        {/* Quick Add Bar */}
+        <form 
+          onSubmit={handleQuickAdd} 
+          className="flex flex-col sm:flex-row gap-0 border-[3px] border-black bg-white rounded-2xl overflow-hidden shadow-[3px_3px_0px_#000] focus-within:shadow-[5px_5px_0px_#000] transition-shadow shrink-0"
+        >
+          <div className="flex-1 flex items-center bg-white px-3 py-1">
+            <Sparkles className="w-4 h-4 text-blue-600 animate-pulse mr-2 shrink-0" />
+            <input
+              type="text"
+              value={quickAdd}
+              onChange={(e) => setQuickAdd(e.target.value)}
+              placeholder="Add task... e.g. 'Testing sound today 12:45 am'"
+              className="w-full py-2.5 font-body text-xs bg-transparent text-black focus:outline-none placeholder:text-gray-400 placeholder:italic"
+              disabled={createTask.isPending}
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={createTask.isPending || !quickAdd.trim()}
+            className="px-4 py-2.5 bg-[#FFD600] text-black border-t-2 sm:border-t-0 sm:border-l-2 border-black shrink-0 flex items-center justify-center gap-1 font-label font-black text-xs uppercase cursor-pointer hover:bg-black hover:text-[#FFD600] transition-colors"
+          >
+            {createTask.isPending ? (
+              <>
+                <span className="w-1.5 h-1.5 bg-black animate-ping rounded-full inline-block" />
+                ...
+              </>
+            ) : (
+              <>
+                <Plus className="w-3.5 h-3.5" />
+                ADD
+              </>
+            )}
+          </button>
+        </form>
 
         {isLoading ? (
           <div className="border-[3px] border-black rounded-[24px] p-12 text-center bg-[#FAF7F2] shadow-[4px_4px_0px_#000]">
