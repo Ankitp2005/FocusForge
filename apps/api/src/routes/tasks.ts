@@ -238,7 +238,14 @@ router.post('/', async (req, res, next) => {
       const smartRemindersEnabled = userPrefs?.enableSmartReminders !== false;
       if (smartRemindersEnabled) {
         const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 60;
-        const remindAt = new Date(finalDueDate.getTime() - leadTimeMins * 60 * 1000);
+        let remindAt = new Date(finalDueDate.getTime() - leadTimeMins * 60 * 1000);
+        
+        // If the calculated reminder time is in the past, but the task is still due in the future,
+        // remind the user at the exact due time instead of firing immediately.
+        if (remindAt.getTime() < Date.now() && finalDueDate.getTime() > Date.now()) {
+          remindAt = finalDueDate;
+        }
+
         const reminder = await prisma.taskReminder.create({
           data: {
             taskId: task.id,
