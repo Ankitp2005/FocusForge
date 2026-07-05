@@ -36,6 +36,10 @@ services:
         sync: false
       - key: RESEND_API_KEY
         sync: false
+      - key: API_URL
+        value: https://focusforge-api-pka3.onrender.com
+      - key: APP_URL
+        value: https://focusforge-frontend-9hi2.onrender.com
 
   # 2. Frontend React Client (Static Website Hosting)
   - type: web
