@@ -127,26 +127,26 @@ export const Today = () => {
   return (
     <MockupLayout activeTab="home">
       <div className="flex flex-col gap-4 font-body relative">
-        {/* Quick Add Bar */}
+        {/* Quick Add Bar — full brutalist treatment */}
         <form 
           onSubmit={handleQuickAdd} 
-          className="flex flex-col sm:flex-row gap-0 border-[3px] border-black bg-white rounded-2xl overflow-hidden shadow-[3px_3px_0px_#000] focus-within:shadow-[5px_5px_0px_#000] transition-shadow shrink-0"
+          className="flex flex-col sm:flex-row gap-0 border-[4px] border-black bg-white rounded-[10px] overflow-hidden shadow-[7px_7px_0px_#000] focus-within:shadow-[9px_9px_0px_#000] transition-shadow shrink-0"
         >
           <div className="flex-1 flex items-center bg-white px-3 py-1">
-            <Sparkles className="w-4 h-4 text-blue-600 animate-pulse mr-2 shrink-0" />
+            <Sparkles className="w-4 h-4 text-black animate-pulse mr-2 shrink-0" />
             <input
               type="text"
               value={quickAdd}
               onChange={(e) => setQuickAdd(e.target.value)}
-              placeholder="Add task... e.g. 'Testing sound today 12:45 am'"
-              className="w-full py-2.5 font-body text-xs bg-transparent text-black focus:outline-none placeholder:text-gray-400 placeholder:italic"
+              placeholder="ADD TASK... E.G. 'DESIGN UI TOMORROW 2PM'"
+              className="w-full py-2.5 font-body text-xs bg-transparent text-black focus:outline-none placeholder:text-black/25 placeholder:font-black uppercase tracking-wide"
               disabled={createTask.isPending}
             />
           </div>
           <button
             type="submit"
             disabled={createTask.isPending || !quickAdd.trim()}
-            className="px-4 py-2.5 bg-[#FFD600] text-black border-t-2 sm:border-t-0 sm:border-l-2 border-black shrink-0 flex items-center justify-center gap-1 font-label font-black text-xs uppercase cursor-pointer hover:bg-black hover:text-[#FFD600] transition-colors"
+            className="px-4 py-2.5 bg-[#FFD600] text-black border-t-[3px] sm:border-t-0 sm:border-l-[3px] border-black shrink-0 flex items-center justify-center gap-1 font-label font-black text-xs uppercase tracking-wider cursor-pointer hover:bg-black hover:text-[#FFD600] transition-colors"
           >
             {createTask.isPending ? (
               <>
@@ -163,26 +163,26 @@ export const Today = () => {
         </form>
 
         {isLoading ? (
-          <div className="border-[3px] border-black rounded-[24px] p-12 text-center bg-[#FAF7F2] shadow-[4px_4px_0px_#000]">
-            <div className="animate-spin w-8 h-8 border-4 border-[#4CD9E3] border-t-transparent inline-block mb-4 rounded-full" />
+          <div className="border-[4px] border-black rounded-[10px] p-12 text-center bg-[#FAF7F2] shadow-[7px_7px_0px_#000]">
+            <div className="animate-spin w-8 h-8 border-4 border-black border-t-transparent inline-block mb-4 rounded-none" />
             <p className="font-label font-black text-sm uppercase tracking-widest">CONNECTING COGNITIVE FLOW...</p>
           </div>
         ) : !focusTask ? (
-          <div className="border-[3px] border-black rounded-[24px] p-8 text-center bg-white shadow-[4px_4px_0px_#000]">
-            <Sparkles className="w-12 h-12 mx-auto text-[#FFD600] mb-4 animate-pulse" />
+          <div className="border-[4px] border-black rounded-[10px] p-8 text-center bg-white shadow-[7px_7px_0px_#000]">
+            <Sparkles className="w-12 h-12 mx-auto text-black mb-4" />
             <h2 className="font-display font-black text-xl uppercase mb-2">ALL QUEUES NEUTRALIZED</h2>
-            <p className="text-gray-500 text-xs leading-relaxed mb-4">
-              No active targets require immediate focus. Navigate to the Challenges directory to commit new objectives.
+            <p className="text-black/55 text-xs leading-relaxed mb-4 font-body font-bold">
+              No active targets. Add a task above or visit Challenges.
             </p>
             <button 
               onClick={() => navigate('/goals')}
-              className="px-4 py-2 border-[2px] border-black bg-[#FFD600] text-black font-label font-bold text-xs uppercase rounded-xl shadow-[2px_2px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-black hover:text-[#FFD600] transition-colors"
+              className="px-4 py-2.5 border-[3px] border-black bg-[#FFD600] text-black font-label font-black text-xs uppercase rounded-[8px] shadow-[4px_4px_0px_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none hover:bg-black hover:text-[#FFD600] transition-colors"
             >
               GO TO CHALLENGES
             </button>
           </div>
         ) : (
-          <div className="border-[3px] border-black rounded-[24px] p-5 bg-white shadow-[4px_4px_0px_#000] flex flex-col justify-between">
+          <div className="border-[4px] border-black rounded-[10px] p-5 bg-white shadow-[7px_7px_0px_#000] flex flex-col justify-between">
             
             {/* Header / Stats */}
             <div className="flex items-center justify-between mb-2">
@@ -200,62 +200,62 @@ export const Today = () => {
               {focusTask.title}
             </h2>
 
-            {/* Author Block inside the Card */}
-            <div className="flex items-center gap-2.5 p-2 bg-[#FAF7F2] rounded-2xl border-[2px] border-black mb-4 select-none shadow-[1px_1px_0px_#000]">
-              <div className="w-8 h-8 rounded-full border-[1.5px] border-black overflow-hidden bg-white shrink-0">
+            {/* Author Block — hard-bordered panel */}
+            <div className="flex items-center gap-2.5 p-2.5 bg-[#FAF7F2] rounded-[8px] border-[2px] border-black mb-4 select-none shadow-[2px_2px_0px_#000]">
+              <div className="w-8 h-8 rounded-[6px] border-[2px] border-black overflow-hidden bg-white shrink-0">
                 <img src={imageUrl} alt="Avatar" className="w-full h-full object-cover scale-105" />
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-black text-[12px] leading-tight text-[#0A0A0A]">{fullName}</span>
-                <span className="text-black/50 font-black text-[10px] leading-none font-label tracking-tight">@{username}</span>
+                <span className="text-black/50 font-black text-[9px] leading-none font-label tracking-widest uppercase">{username}</span>
               </div>
             </div>
 
-            {/* Mock stats */}
-            <div className="flex justify-between items-center text-[10px] font-label font-black text-black/60 uppercase tracking-widest border-b-[2px] border-black/10 pb-3 mb-4 select-none">
+            {/* Stats — 3px solid divider */}
+            <div className="flex justify-between items-center text-[9px] font-label font-black text-black/55 uppercase tracking-[0.15em] border-b-[3px] border-black pb-3 mb-4 select-none">
               <span>0/1 Participants</span>
               <span>0 Submissions</span>
             </div>
 
-            {/* Big digit countdown blocks exactly like reference */}
+            {/* Big digit countdown — SHARP SQUARE blocks */}
             <div className="flex items-center justify-center gap-3 my-4 select-none">
               <div className="flex flex-col items-center">
-                <div className="w-14 h-14 bg-white border-[3px] border-black rounded-[14px] shadow-[3px_3px_0px_#000] flex items-center justify-center font-display font-black text-2xl">
+                <div className="w-16 h-16 bg-white border-[3px] border-black rounded-[4px] shadow-[4px_4px_0px_#000] flex items-center justify-center font-display font-black text-3xl">
                   {h.toString().padStart(2, '0')}
                 </div>
-                <span className="text-[9px] font-label font-black text-red-500 mt-2 uppercase tracking-wide">Hours</span>
+                <span className="text-[8px] font-label font-black text-[#FF4B55] mt-2 uppercase tracking-[0.2em]">Hours</span>
               </div>
-              <span className="font-display font-black text-2xl text-red-500 mb-5">:</span>
+              <span className="font-display font-black text-3xl text-[#FF4B55] mb-6">:</span>
               <div className="flex flex-col items-center">
-                <div className="w-14 h-14 bg-white border-[3px] border-black rounded-[14px] shadow-[3px_3px_0px_#000] flex items-center justify-center font-display font-black text-2xl animate-pulse">
+                <div className="w-16 h-16 bg-[#FFD600] border-[3px] border-black rounded-[4px] shadow-[4px_4px_0px_#000] flex items-center justify-center font-display font-black text-3xl">
                   {m.toString().padStart(2, '0')}
                 </div>
-                <span className="text-[9px] font-label font-black text-red-500 mt-2 uppercase tracking-wide">Mins</span>
+                <span className="text-[8px] font-label font-black text-[#FF4B55] mt-2 uppercase tracking-[0.2em]">Mins</span>
               </div>
-              <span className="font-display font-black text-2xl text-red-500 mb-5">:</span>
+              <span className="font-display font-black text-3xl text-[#FF4B55] mb-6">:</span>
               <div className="flex flex-col items-center">
-                <div className="w-14 h-14 bg-white border-[3px] border-black rounded-[14px] shadow-[3px_3px_0px_#000] flex items-center justify-center font-display font-black text-2xl">
+                <div className="w-16 h-16 bg-white border-[3px] border-black rounded-[4px] shadow-[4px_4px_0px_#000] flex items-center justify-center font-display font-black text-3xl">
                   {s.toString().padStart(2, '0')}
                 </div>
-                <span className="text-[9px] font-label font-black text-red-500 mt-2 uppercase tracking-wide">Secs</span>
+                <span className="text-[8px] font-label font-black text-[#FF4B55] mt-2 uppercase tracking-[0.2em]">Secs</span>
               </div>
             </div>
 
-            {/* Submission Input Box */}
+            {/* Submission Input */}
             <input 
               type="text" 
-              placeholder="Paste Submission URL Here" 
+              placeholder="PASTE SUBMISSION URL HERE" 
               value={submissionUrl} 
               onChange={(e) => setSubmissionUrl(e.target.value)}
-              className="w-full bg-white border-[3px] border-black rounded-[14px] p-3 text-xs font-body focus:outline-none focus:border-[#FFD600] placeholder-gray-400 mt-2 shadow-[2px_2px_0px_#000]"
+              className="w-full bg-white border-[3px] border-black rounded-[8px] p-3 text-xs font-body font-bold uppercase tracking-wide focus:outline-none focus:border-[#FFD600] placeholder-black/25 mt-2 shadow-[3px_3px_0px_#000]"
             />
 
-            {/* Timer controls */}
+            {/* Timer controls — blockier buttons */}
             <div className="flex gap-2 mt-4 w-full">
               {!inFocusSession ? (
                 <button
                   onClick={handleStartFocus}
-                  className="flex-1 py-3 border-[3px] border-black bg-[#4CD9E3] text-black font-display font-black text-sm uppercase tracking-wider rounded-2xl shadow-[3px_3px_0px_#000] hover:bg-black hover:text-[#4CD9E3] transition-colors active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                  className="flex-1 py-3.5 border-[3px] border-black bg-[#4CD9E3] text-black font-display font-black text-sm uppercase tracking-wider rounded-[8px] shadow-[5px_5px_0px_#000] hover:bg-black hover:text-[#4CD9E3] transition-colors active:translate-x-[5px] active:translate-y-[5px] active:shadow-none"
                 >
                   ENGAGE TIMER
                 </button>
@@ -263,13 +263,13 @@ export const Today = () => {
                 <div className="flex-1 flex gap-2">
                   <button
                     onClick={() => setIsRunning((r) => !r)}
-                    className="flex-1 py-3 border-[3px] border-black bg-[#FFD600] text-black font-display font-black text-sm uppercase tracking-wider rounded-2xl shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none hover:bg-black hover:text-[#FFD600] transition-colors"
+                    className="flex-1 py-3.5 border-[3px] border-black bg-[#FFD600] text-black font-display font-black text-sm uppercase tracking-wider rounded-[8px] shadow-[5px_5px_0px_#000] active:translate-x-[5px] active:translate-y-[5px] active:shadow-none hover:bg-black hover:text-[#FFD600] transition-colors"
                   >
-                    {isRunning ? 'PAUSE TIMER' : 'RESUME TIMER'}
+                    {isRunning ? 'PAUSE' : 'RESUME'}
                   </button>
                   <button
                     onClick={handleResetTimer}
-                    className="py-3 px-4 border-[3px] border-black bg-gray-100 text-black hover:bg-black hover:text-white transition-colors rounded-2xl shadow-[3px_3px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                    className="py-3.5 px-4 border-[3px] border-black bg-[#FAF7F2] text-black hover:bg-black hover:text-white transition-colors rounded-[8px] shadow-[5px_5px_0px_#000] active:translate-x-[5px] active:translate-y-[5px] active:shadow-none"
                   >
                     <RotateCcw className="w-4 h-4" />
                   </button>
@@ -277,11 +277,11 @@ export const Today = () => {
               )}
             </div>
 
-            {/* Complete I'M DONE yellow button */}
+            {/* I'M DONE — full-width heavy CTA */}
             <button
               onClick={handleComplete}
               disabled={completeTask.isPending}
-              className="w-full py-4 border-[3px] border-black bg-[#FFD600] text-black font-display font-black text-sm uppercase tracking-widest rounded-2xl shadow-[4px_4px_0px_#000] hover:bg-black hover:text-[#FFD600] transition-colors active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-50 mt-3"
+              className="w-full py-4 border-[3px] border-black bg-[#FFD600] text-black font-display font-black text-base uppercase tracking-widest rounded-[8px] shadow-[5px_5px_0px_#000] hover:bg-black hover:text-[#FFD600] transition-colors active:translate-x-[5px] active:translate-y-[5px] active:shadow-none disabled:opacity-50 mt-3"
             >
               I'M DONE!
             </button>
@@ -289,10 +289,10 @@ export const Today = () => {
           </div>
         )}
 
-        {/* Collapsible/Scrollable AI Planner & Queue sections */}
-        <div className="border-[3px] border-black rounded-[24px] p-5 bg-white shadow-[4px_4px_0px_#000] select-none">
-          <div className="flex justify-between items-center border-b border-gray-100 pb-2 mb-3">
-            <span className="font-display font-black text-sm uppercase text-black flex items-center gap-1.5">
+        {/* AI Daily Timeline section */}
+        <div className="border-[4px] border-black rounded-[10px] p-5 bg-white shadow-[7px_7px_0px_#000] select-none">
+          <div className="flex justify-between items-center border-b-[3px] border-black pb-3 mb-3">
+            <span className="font-display font-black text-sm uppercase tracking-wide text-black flex items-center gap-1.5">
               ⚡ AI DAILY TIMELINE
             </span>
             {dailyPlan && (
@@ -347,8 +347,8 @@ export const Today = () => {
 
         {/* Next Up List */}
         {tasks.length > 1 && (
-          <div className="border-[3px] border-black rounded-[24px] p-5 bg-white shadow-[4px_4px_0px_#000]">
-            <span className="font-display font-black text-sm uppercase text-black block border-b border-gray-100 pb-2 mb-3">
+          <div className="border-[4px] border-black rounded-[10px] p-5 bg-white shadow-[7px_7px_0px_#000]">
+            <span className="font-display font-black text-sm uppercase text-black block border-b-[3px] border-black pb-2 mb-3 tracking-wider">
               🎯 NEXT IN PIPELINE
             </span>
             <div className="space-y-2">
@@ -356,13 +356,13 @@ export const Today = () => {
                 <div
                   key={task.id}
                   onClick={() => setSelectedTaskId(task.id)}
-                  className="border-[2px] border-black p-3 bg-[#FAF7F2] hover:bg-[#FFD600] rounded-xl shadow-[2px_2px_0px_#000] transition-all flex items-center justify-between cursor-pointer group text-[11px] hover:shadow-[3px_3px_0px_#000] brutal-card-hover"
+                  className="border-[2.5px] border-black p-3 bg-[#FAF7F2] hover:bg-[#FFD600] rounded-[8px] shadow-[3px_3px_0px_#000] transition-all flex items-center justify-between cursor-pointer group text-[11px] hover:shadow-[5px_5px_0px_#000] brutal-card-hover"
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="text-[8px] font-label font-black text-[#FF4B55] uppercase tracking-widest block">
+                    <span className="text-[8px] font-label font-black text-[#FF4B55] uppercase tracking-[0.2em] block">
                       #{idx + 2} {task.priority}
                     </span>
-                    <p className="font-bold text-black truncate mt-0.5">{task.title}</p>
+                    <p className="font-black text-black truncate mt-0.5 uppercase text-xs">{task.title}</p>
                   </div>
                   <ChevronRight className="w-4 h-4 text-black/40 shrink-0 ml-2 group-hover:text-black transition-colors" />
                 </div>

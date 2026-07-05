@@ -259,15 +259,15 @@ export const Habits = () => {
           </div>
         )}
 
-        {/* Search Input matching mockup */}
-        <div className="relative border-[3px] border-black rounded-[14px] bg-white px-3.5 py-3 flex items-center gap-2 shadow-[3px_3px_0px_#000]">
+        {/* Search Input */}
+        <div className="relative border-[4px] border-black rounded-[10px] bg-white px-3.5 py-3 flex items-center gap-2 shadow-[5px_5px_0px_#000]">
           <Search className="w-5 h-5 text-black shrink-0" />
           <input
             type="text"
-            placeholder="Search by Name or Username"
+            placeholder="SEARCH BY NAME OR USERNAME"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent text-xs text-black focus:outline-none placeholder-gray-400 font-bold"
+            className="w-full bg-transparent text-xs text-black focus:outline-none placeholder-black/30 font-black uppercase tracking-wide"
           />
         </div>
 
@@ -280,7 +280,7 @@ export const Habits = () => {
           {isLoading ? (
             <div className="text-center font-display font-bold text-xs tracking-widest py-8">SCANNING ENGINE...</div>
           ) : incompleteHabits.length === 0 ? (
-            <div className="text-center font-display font-black text-sm border-[3px] border-black py-10 rounded-[20px] bg-white shadow-[3px_3px_0px_#000] uppercase tracking-wider">
+            <div className="text-center font-display font-black text-sm border-[4px] border-black py-10 rounded-[10px] bg-white shadow-[7px_7px_0px_#000] uppercase tracking-wider">
               <div className="text-3xl mb-2">✅</div>
               <div className="text-black text-xs">All disciplines done!</div>
             </div>
@@ -289,11 +289,11 @@ export const Habits = () => {
               {incompleteHabits.map((habit) => (
                 <div
                   key={habit.id}
-                  className="border-[3px] border-black rounded-[20px] p-4 bg-white shadow-[3px_3px_0px_#000] flex items-center justify-between gap-3 group"
+                  className="border-[3px] border-black rounded-[10px] p-4 bg-white shadow-[5px_5px_0px_#000] flex items-center justify-between gap-3 group"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     {/* Cute graphic/emoji placeholder avatar */}
-                    <div className="w-10 h-10 rounded-full border-[2px] border-black bg-[#FAF7F2] flex items-center justify-center text-lg shadow-[1.5px_1.5px_0px_#000] shrink-0">
+                    <div className="w-10 h-10 rounded-[8px] border-[2px] border-black bg-[#FAF7F2] flex items-center justify-center text-lg shadow-[2px_2px_0px_#000] shrink-0">
                       {getHabitIcon(habit.title)}
                     </div>
                     <div className="min-w-0">
@@ -341,7 +341,7 @@ export const Habits = () => {
           </span>
           
           {completedHabits.length === 0 ? (
-            <div className="text-center font-display font-black text-sm border-[3px] border-black py-10 rounded-[20px] bg-white shadow-[3px_3px_0px_#000] uppercase tracking-wider">
+            <div className="text-center font-display font-black text-sm border-[4px] border-black py-10 rounded-[10px] bg-white shadow-[7px_7px_0px_#000] uppercase tracking-wider">
               <div className="text-3xl mb-2">🎯</div>
               <div className="text-black text-xs">No completions yet</div>
             </div>
@@ -350,10 +350,10 @@ export const Habits = () => {
               {completedHabits.map((habit) => (
                 <div
                   key={habit.id}
-                  className="border-[3px] border-black rounded-[20px] p-4 bg-[#FAF7F2] border-opacity-70 shadow-[2px_2px_0px_#000] flex items-center justify-between gap-3 opacity-80"
+                  className="border-[3px] border-black rounded-[10px] p-4 bg-[#FAF7F2] shadow-[3px_3px_0px_#000] flex items-center justify-between gap-3 opacity-75"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full border-[2px] border-black bg-white flex items-center justify-center text-lg shrink-0">
+                    <div className="w-10 h-10 rounded-[8px] border-[2px] border-black bg-white flex items-center justify-center text-lg shrink-0 shadow-[2px_2px_0px_#000]">
                       🔥
                     </div>
                     <div className="min-w-0">

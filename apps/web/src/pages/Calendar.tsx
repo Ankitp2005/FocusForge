@@ -71,21 +71,21 @@ export const Calendar = () => {
       <div className="flex flex-col gap-4 font-body select-none">
         
         {isLoading ? (
-          <div className="border-[3px] border-black rounded-[24px] p-12 text-center bg-[#FAF7F2] shadow-[4px_4px_0px_#000]">
-            <div className="animate-spin w-8 h-8 border-4 border-[#4CD9E3] border-t-transparent inline-block mb-4 rounded-full" />
+          <div className="border-[4px] border-black rounded-[10px] p-12 text-center bg-[#FAF7F2] shadow-[7px_7px_0px_#000]">
+            <div className="animate-spin w-8 h-8 border-4 border-black border-t-transparent inline-block mb-4 rounded-none" />
             <p className="font-label font-black text-sm uppercase tracking-widest">SCANNING DATA SYSTEMS...</p>
           </div>
         ) : !isConnected ? (
-          <div className="border-[3px] border-black rounded-[24px] p-6 text-center bg-white shadow-[4px_4px_0px_#000] flex flex-col items-center">
-            <CalendarIcon className="w-14 h-14 text-[#4CD9E3] mb-4 animate-bounce mt-4" />
+          <div className="border-[4px] border-black rounded-[10px] p-6 text-center bg-white shadow-[7px_7px_0px_#000] flex flex-col items-center">
+            <CalendarIcon className="w-14 h-14 text-[#4CD9E3] mb-4 mt-4" />
             <h2 className="font-display font-black text-xl tracking-tight uppercase mb-2">CONNECT YOUR REALITY</h2>
             <p className="text-black/60 text-xs leading-relaxed mb-6 max-w-sm font-body font-bold">
-              Sync with Google Calendar to overlay your tasks directly onto your free time. FocusForge AI automatically schedules focus slots to prevent conflicts and maximize throughput.
+              Sync with Google Calendar to overlay your tasks directly onto your free time. FocusForge AI automatically schedules focus slots.
             </p>
             <button
               onClick={() => connect.mutate()}
               disabled={connect.isPending}
-              className="w-full py-3.5 border-[3px] border-black bg-[#4CD9E3] text-black font-display font-black text-xs uppercase tracking-widest rounded-2xl shadow-[4px_4px_0px_#000] hover:bg-black hover:text-[#4CD9E3] transition-colors disabled:opacity-50 active:translate-x-[2.5px] active:translate-y-[2.5px] active:shadow-none"
+              className="w-full py-3.5 border-[3px] border-black bg-[#4CD9E3] text-black font-display font-black text-xs uppercase tracking-widest rounded-[8px] shadow-[5px_5px_0px_#000] hover:bg-black hover:text-[#4CD9E3] transition-colors disabled:opacity-50 active:translate-x-[5px] active:translate-y-[5px] active:shadow-none"
             >
               {connect.isPending ? 'STAGING OAUTH...' : 'CONNECT GOOGLE CALENDAR'}
             </button>
@@ -94,7 +94,7 @@ export const Calendar = () => {
           <div className="space-y-4">
             
             {/* Sync State Card */}
-            <div className="border-[3px] border-black rounded-[24px] p-4 bg-white shadow-[4px_4px_0px_#000]">
+            <div className="border-[4px] border-black rounded-[10px] p-4 bg-white shadow-[7px_7px_0px_#000]">
               <div className="flex justify-between items-start flex-wrap gap-2 pb-2.5 border-b-[2px] border-black/10">
                 <div>
                   <span className="bg-[#C3EE52] text-black border-[2px] border-black px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider select-none inline-block shadow-[1.5px_1.5px_0px_#000]">
@@ -150,12 +150,12 @@ export const Calendar = () => {
             )}
 
             {/* Timetable schedule grid overlay */}
-            <div className="border-[3px] border-black rounded-[24px] p-4 bg-white shadow-[4px_4px_0px_#000]">
-              <span className="font-display font-black text-sm uppercase text-black block mb-3 border-b-[2px] border-black/10 pb-2">
+            <div className="border-[4px] border-black rounded-[10px] p-4 bg-white shadow-[7px_7px_0px_#000]">
+              <span className="font-display font-black text-sm uppercase text-black block mb-3 border-b-[3px] border-black pb-2 tracking-wider">
                 📅 TODAY'S SCHEDULE OVERLAY
               </span>
               
-              <div className="border-2 border-black rounded-xl bg-[#FAF7F2] relative overflow-hidden h-72 overflow-y-auto">
+              <div className="border-[3px] border-black rounded-[8px] bg-[#FAF7F2] relative overflow-hidden h-72 overflow-y-auto">
                 {/* 9 AM to 5 PM list slots */}
                 {[9, 10, 11, 12, 13, 14, 15, 16, 17].map((hour) => (
                   <div key={hour} className="flex border-b border-gray-200 h-12 relative">
@@ -233,10 +233,10 @@ export const Calendar = () => {
             </div>
 
             {/* Bottom info banner */}
-            <div className="border-[3px] border-black rounded-[20px] bg-[#FAF7F2] p-3 shadow-[3px_3px_0px_#000] flex gap-2 items-start">
+            <div className="border-[4px] border-black rounded-[10px] bg-[#FAF7F2] p-3 shadow-[5px_5px_0px_#000] flex gap-2 items-start">
               <Info className="w-4 h-4 text-black shrink-0 mt-0.5" />
               <p className="text-[10px] font-body text-black/70 leading-relaxed font-bold">
-                AI Schedule Injections occur automatically in open slots between synchronized calendar blocks. Adjust parameters in Settings.
+                AI Schedule Injections occur automatically in open slots between synchronized calendar blocks.
               </p>
             </div>
 

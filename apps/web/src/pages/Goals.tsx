@@ -4,7 +4,7 @@ import { fetchApi } from '@/lib/api';
 import { useUser } from '@/components/AuthProvider';
 import { MockupLayout } from '@/components/MockupLayout';
 import toast from 'react-hot-toast';
-import { Plus, Search, X, Star } from 'lucide-react';
+import { Plus, Search, X } from 'lucide-react';
 
 interface Milestone {
   id: string;
@@ -235,34 +235,31 @@ export const Goals = () => {
     <MockupLayout activeTab="challenges" floatingButton={plusButton}>
       <div className="flex flex-col gap-4 font-body relative">
         
-        {/* Search Bar matching reference */}
-        <div className="relative border-[3px] border-black rounded-[14px] bg-white px-3.5 py-3 flex items-center gap-2 shadow-[3px_3px_0px_#000] focus-within:translate-x-[1px] focus-within:translate-y-[1px] focus-within:shadow-[2px_2px_0px_#000] transition-all">
+        {/* Search Bar — heavy border, deep shadow */}
+        <div className="relative border-[4px] border-black rounded-[10px] bg-white px-3.5 py-3 flex items-center gap-2 shadow-[5px_5px_0px_#000] focus-within:translate-x-[2px] focus-within:translate-y-[2px] focus-within:shadow-[3px_3px_0px_#000] transition-all">
           <Search className="w-5 h-5 text-black shrink-0" />
           <input
             type="text"
             placeholder="Search by Name or Creator"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent text-xs text-black focus:outline-none placeholder-gray-400 font-bold"
+            className="w-full bg-transparent text-xs text-black focus:outline-none placeholder-black/30 font-bold uppercase tracking-wide"
           />
         </div>
 
-        {/* Tab Controls exact style */}
-        <div className="flex border-b-[2.5px] border-black font-label text-[10px] font-black uppercase tracking-wider pb-1 mb-2 select-none overflow-x-auto gap-4">
+        {/* Tab Controls — solid block button system */}
+        <div className="flex gap-2 select-none overflow-x-auto pb-1">
           {(['CREATED', 'INVITED', 'PUBLIC', 'SUBMITTED'] as const).map((tab) => {
             const active = activeTab === tab;
             return (
               <button
                 key={tab}
                 onClick={() => setActiveFilterTab(tab)}
-                className={`py-1 relative px-0.5 whitespace-nowrap cursor-pointer transition-colors ${
-                  active ? 'text-black font-black' : 'text-black/60 hover:text-black'
+                className={`brutal-tab ${
+                  active ? 'brutal-tab-active' : ''
                 }`}
               >
                 {tab}
-                {active && (
-                  <span className="absolute bottom-[-5px] left-0 right-0 h-[3.5px] bg-black rounded-full" />
-                )}
               </button>
             );
           })}
@@ -270,12 +267,12 @@ export const Goals = () => {
 
         {/* Goal Creator Form Card Overlay */}
         {showAddForm && (
-          <div className="border-[3px] border-black bg-white rounded-[24px] p-5 shadow-[4px_4px_0px_#000] animate-in fade-in slide-in-from-top-4 duration-200">
-            <div className="flex justify-between items-center border-b border-gray-100 pb-2 mb-4">
-              <span className="font-display font-black text-sm uppercase">Create Challenge</span>
+          <div className="border-[4px] border-black bg-white rounded-[10px] p-5 shadow-[7px_7px_0px_#000] animate-slide-up">
+            <div className="flex justify-between items-center border-b-[3px] border-black pb-3 mb-4">
+              <span className="font-display font-black text-sm uppercase tracking-wider">Create Challenge</span>
               <button 
                 onClick={() => setShowAddForm(false)} 
-                className="w-6 h-6 border-[2px] border-black rounded-full flex items-center justify-center bg-gray-100 hover:bg-black hover:text-white"
+                className="w-7 h-7 border-[2px] border-black rounded-[6px] flex items-center justify-center bg-[#FAF7F2] hover:bg-black hover:text-white shadow-[2px_2px_0px_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -387,7 +384,7 @@ export const Goals = () => {
             SCANNING CHALLENGES...
           </div>
         ) : filteredGoals.length === 0 ? (
-          <div className="text-center font-display font-black text-sm border-[3px] border-black py-16 rounded-[24px] bg-white shadow-[4px_4px_0px_#000] uppercase tracking-wider">
+          <div className="text-center font-display font-black text-sm border-[4px] border-black py-16 rounded-[10px] bg-white shadow-[7px_7px_0px_#000] uppercase tracking-widest">
             <div className="text-4xl mb-3">🏆</div>
             <div className="text-black">No challenges yet</div>
             <div className="text-[10px] font-label font-bold text-black/50 mt-1 normal-case tracking-normal">Tap + to create your first challenge</div>
@@ -412,26 +409,23 @@ export const Goals = () => {
               return (
                 <div
                   key={goal.id}
-                  className="border-[3px] border-black rounded-[24px] p-5 bg-white shadow-[4px_4px_0px_#000] relative flex flex-col justify-between"
+                  className="border-[4px] border-black rounded-[10px] p-5 bg-white shadow-[7px_7px_0px_#000] relative flex flex-col justify-between"
                 >
                   
-                  {/* Difficulty label & Stars */}
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] font-label font-black text-black/60 uppercase tracking-widest">Difficulty</span>
-                    <div className="flex gap-0.5">
+                  {/* Difficulty label & Stars — bold editorial treatment */}
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[9px] font-label font-black text-black/50 uppercase tracking-[0.2em]">Difficulty</span>
+                    <div className="flex gap-0.5 text-[15px] leading-none select-none">
                       {Array.from({ length: 5 }).map((_, idx) => (
-                        <Star 
-                          key={idx} 
-                          className="w-3.5 h-3.5" 
-                          fill={idx < starsCount ? '#0A0A0A' : 'none'} 
-                          stroke="#0A0A0A" 
-                        />
+                        <span key={idx} className={idx < starsCount ? 'text-black' : 'text-black/20'}>
+                          {idx < starsCount ? '★' : '☆'}
+                        </span>
                       ))}
                     </div>
                   </div>
 
-                  {/* Title & Desc */}
-                  <h3 className="font-display font-black text-lg text-black leading-tight tracking-tight mt-1">
+                  {/* Title — big, commanding */}
+                  <h3 className="font-display font-black text-2xl text-black leading-tight tracking-tight mt-1 uppercase">
                     {goal.title}
                   </h3>
                   {goal.description && (
@@ -440,43 +434,43 @@ export const Goals = () => {
                     </p>
                   )}
 
-                  {/* Creator Avatar Block */}
-                  <div className="flex items-center gap-2 mt-3 p-2 bg-[#FAF7F2] rounded-xl border-[2px] border-black select-none">
-                    <div className="w-7 h-7 rounded-full border-[1.5px] border-black overflow-hidden bg-white shrink-0 shadow-[1px_1px_0px_#000]">
+                  {/* Creator Avatar Block — hard-bordered strip */}
+                  <div className="flex items-center gap-2 mt-3 p-2.5 bg-[#FAF7F2] rounded-[8px] border-[2px] border-black select-none shadow-[2px_2px_0px_#000]">
+                    <div className="w-7 h-7 rounded-[6px] border-[2px] border-black overflow-hidden bg-white shrink-0">
                       <img src={imageUrl} alt="Avatar" className="w-full h-full object-cover scale-105" />
                     </div>
                     <div className="flex flex-col">
                       <span className="font-display font-black text-[11px] leading-tight text-[#0A0A0A]">{fullName}</span>
-                      <span className="text-[#0A0A0A]/60 font-black text-[9px] leading-none font-label tracking-tight">@{username}</span>
+                      <span className="text-[#0A0A0A]/55 font-black text-[9px] leading-none font-label tracking-wider uppercase">{username}</span>
                     </div>
                   </div>
 
-                  {/* Stats */}
-                  <div className="flex justify-between items-center mt-3 text-[10px] font-label font-black text-black/60 uppercase border-b-[2px] border-black/10 pb-2.5 tracking-wider">
+                  {/* Stats — hard 3px divider */}
+                  <div className="flex justify-between items-center mt-3 text-[9px] font-label font-black text-black/55 uppercase border-b-[3px] border-black pb-2.5 tracking-[0.15em]">
                     <span>{completed}/{total} Milestones</span>
                     <span>0 Submissions</span>
                   </div>
 
-                  {/* Dates with red highlights */}
-                  <div className="flex justify-between items-center mt-2 text-[10px] font-label font-black select-none">
+                  {/* Dates */}
+                  <div className="flex justify-between items-center mt-2.5 text-[9px] font-label font-black select-none">
                     <div className="flex gap-3">
-                      <span className="text-[#FF4B55] font-black tracking-wide">{startsText}</span>
-                      <span className="text-[#FF4B55] font-black tracking-wide">{endsText}</span>
+                      <span className="text-[#FF4B55] font-black tracking-wider uppercase">{startsText}</span>
+                      <span className="text-[#FF4B55] font-black tracking-wider uppercase">{endsText}</span>
                     </div>
                     {goal.targetDate && (
-                      <span className="text-black/70 font-mono font-bold tracking-tight">
-                        DUE: {format(new Date(goal.targetDate), 'MMM d, h:mma').toUpperCase()}
+                      <span className="text-black/60 font-mono font-black text-[9px]">
+                        DUE: {format(new Date(goal.targetDate), 'MMM d').toUpperCase()}
                       </span>
                     )}
                   </div>
 
-                  {/* Action Buttons: EDIT (Toggles Milestones Checklist) & SHARE (Purges) */}
+                  {/* Action Buttons — heavier, blockier */}
                   <div className="grid grid-cols-2 gap-3 mt-4">
                     <button
                       onClick={() => setExpandedMilestonesGoalId(isMilestonesExpanded ? null : goal.id)}
-                      className="py-2.5 border-[2.5px] border-black bg-[#FFD600] text-black font-display font-black text-[11px] uppercase tracking-wider rounded-xl shadow-[3px_3px_0px_#000] hover:bg-black hover:text-[#FFD600] transition-colors active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+                      className="py-3 border-[3px] border-black bg-[#FFD600] text-black font-display font-black text-[11px] uppercase tracking-wider rounded-[8px] shadow-[4px_4px_0px_#000] hover:bg-black hover:text-[#FFD600] transition-colors active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
                     >
-                      {isMilestonesExpanded ? 'CLOSE EDIT' : 'EDIT'}
+                      {isMilestonesExpanded ? 'CLOSE' : 'EDIT'}
                     </button>
                     
                     <button
@@ -487,9 +481,9 @@ export const Goals = () => {
                           handleDeleteGoal(goal.id);
                         }
                       }}
-                      className="py-2.5 border-[2.5px] border-black bg-[#4CD9E3] text-black font-display font-black text-[11px] uppercase tracking-wider rounded-xl shadow-[3px_3px_0px_#000] hover:bg-black hover:text-[#4CD9E3] transition-colors active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+                      className="py-3 border-[3px] border-black bg-[#4CD9E3] text-black font-display font-black text-[11px] uppercase tracking-wider rounded-[8px] shadow-[4px_4px_0px_#000] hover:bg-black hover:text-[#4CD9E3] transition-colors active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
                     >
-                      {goal.status === 'COMPLETED' ? 'PURGE' : 'SHARE'}
+                      {goal.status === 'COMPLETED' ? 'PURGE' : 'COMPLETE'}
                     </button>
                   </div>
 
