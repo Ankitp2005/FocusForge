@@ -43,6 +43,16 @@
     </application>
 
     <!-- Permissions -->
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Notification permissions (required for local/push notifications) -->
+    <!-- POST_NOTIFICATIONS is required on Android 13+ (API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- VIBRATE allows notifications to vibrate the device -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- RECEIVE_BOOT_COMPLETED allows rescheduling alarms after reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- SCHEDULE_EXACT_ALARM allows precise alarm delivery (API 31+) -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
 </manifest>

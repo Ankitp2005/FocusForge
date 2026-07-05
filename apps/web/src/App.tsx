@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/reac
 import { Toaster, toast } from 'react-hot-toast';
 import { Capacitor } from '@capacitor/core';
 import { App as CapApp } from '@capacitor/app';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 import { AuthProvider, SignedIn, SignedOut, RedirectToSignIn, useAuth } from '@/components/AuthProvider';
 import { Login } from '@/pages/Login';
@@ -56,6 +57,17 @@ function AppContent() {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  // ── Request notification permission on boot (Android 13+ requires explicit grant) ──
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      LocalNotifications.requestPermissions().then((result) => {
+        if (result.display !== 'granted') {
+          console.warn('[Notification] Permission not granted. Native notifications will not fire.');
+        }
+      }).catch(() => {/* Ignore — permissions may already be set */});
     }
   }, []);
 
@@ -117,12 +129,39 @@ function AppContent() {
       queryClientInstance.invalidateQueries({ queryKey: ['tasks'] });
     };
 
-    const handleReminderFired = (reminder: Reminder) => {
+    const handleReminderFired = async (reminder: Reminder) => {
       setActiveReminder(reminder);
       toast(`ALARM FIRED: ${reminder.title}`, {
         icon: '🚨',
         className: 'border-2 border-lmls-red font-body font-bold',
       });
+
+      // ── Native Notification ──────────────────────────────────────────
+      // Fire a native OS-level notification so the alert appears even when
+      // the app is minimised or the screen is off. This is the primary fix
+      // for reminders being silently dropped on mobile.
+      if (Capacitor.isNativePlatform()) {
+        try {
+          await LocalNotifications.schedule({
+            notifications: [
+              {
+                id: Math.floor(Math.random() * 100000),
+                title: `🚨 ${reminder.priority} PRIORITY — FOCUSFORGE`,
+                body: reminder.message || `"${reminder.title}" requires your immediate attention.`,
+                sound: 'default',
+                // Extra data carried into the notification tap handler
+                extra: {
+                  reminderId: reminder.reminderId,
+                  taskId: reminder.taskId,
+                },
+                channelId: 'focusforge-reminders',
+              },
+            ],
+          });
+        } catch (nativeErr) {
+          console.warn('[Notification] Failed to schedule native notification:', nativeErr);
+        }
+      }
     };
 
     const initSocket = async () => {

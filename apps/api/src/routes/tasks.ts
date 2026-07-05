@@ -230,28 +230,31 @@ router.post('/', async (req, res, next) => {
     });
 
     // Schedule reminder and prioritize
-    const userPrefs = await prisma.userPreferences.findUnique({
-      where: { userId: req.user!.id },
-    });
-    const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 30;
-
     if (finalDueDate) {
-      const remindAt = new Date(finalDueDate.getTime() - leadTimeMins * 60 * 1000);
-      const reminder = await prisma.taskReminder.create({
-        data: {
-          taskId: task.id,
-          userId: req.user!.id,
-          remindAt,
-          status: 'PENDING',
-        },
+      const userPrefs = await prisma.userPreferences.findUnique({
+        where: { userId: req.user!.id },
       });
+      // Only schedule reminder if enableSmartReminders is not explicitly disabled
+      const smartRemindersEnabled = userPrefs?.enableSmartReminders !== false;
+      if (smartRemindersEnabled) {
+        const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 60;
+        const remindAt = new Date(finalDueDate.getTime() - leadTimeMins * 60 * 1000);
+        const reminder = await prisma.taskReminder.create({
+          data: {
+            taskId: task.id,
+            userId: req.user!.id,
+            remindAt,
+            status: 'PENDING',
+          },
+        });
 
-      const delay = Math.max(0, remindAt.getTime() - Date.now());
-      await reminderQueue.add(
-        'send-reminder',
-        { reminderId: reminder.id },
-        { delay, jobId: `reminder:${reminder.id}` }
-      );
+        const delay = Math.max(0, remindAt.getTime() - Date.now());
+        await reminderQueue.add(
+          'send-reminder',
+          { reminderId: reminder.id },
+          { delay, jobId: `reminder:${reminder.id}` }
+        );
+      }
     }
 
     await prioritizationQueue.add(
@@ -353,24 +356,28 @@ router.patch('/:id', async (req, res, next) => {
         const userPrefs = await prisma.userPreferences.findUnique({
           where: { userId: req.user!.id },
         });
-        const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 30;
-        const remindAt = new Date(newDueDate.getTime() - leadTimeMins * 60 * 1000);
+        // Only schedule reminder if enableSmartReminders is not explicitly disabled
+        const smartRemindersEnabled = userPrefs?.enableSmartReminders !== false;
+        if (smartRemindersEnabled) {
+          const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 60;
+          const remindAt = new Date(newDueDate.getTime() - leadTimeMins * 60 * 1000);
 
-        const reminder = await prisma.taskReminder.create({
-          data: {
-            taskId: task.id,
-            userId: req.user!.id,
-            remindAt,
-            status: 'PENDING',
-          },
-        });
+          const reminder = await prisma.taskReminder.create({
+            data: {
+              taskId: task.id,
+              userId: req.user!.id,
+              remindAt,
+              status: 'PENDING',
+            },
+          });
 
-        const delay = Math.max(0, remindAt.getTime() - Date.now());
-        await reminderQueue.add(
-          'send-reminder',
-          { reminderId: reminder.id },
-          { delay, jobId: `reminder:${reminder.id}` }
-        );
+          const delay = Math.max(0, remindAt.getTime() - Date.now());
+          await reminderQueue.add(
+            'send-reminder',
+            { reminderId: reminder.id },
+            { delay, jobId: `reminder:${reminder.id}` }
+          );
+        }
       }
 
       // Recalculate priority
@@ -636,25 +643,28 @@ Return ONLY a valid ISO8601 datetime string, with no other text, markdown block,
     const userPrefs = await prisma.userPreferences.findUnique({
       where: { userId: req.user!.id },
     });
-    const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 30;
+    const smartRemindersEnabled = userPrefs?.enableSmartReminders !== false;
+    const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 60;
     const remindAt = new Date(finalSnoozeUntil.getTime() - leadTimeMins * 60 * 1000);
     const finalRemindAt = remindAt.getTime() > Date.now() ? remindAt : finalSnoozeUntil;
 
-    const reminder = await prisma.taskReminder.create({
-      data: {
-        taskId: task.id,
-        userId: req.user!.id,
-        remindAt: finalRemindAt,
-        status: 'PENDING',
-      },
-    });
+    if (smartRemindersEnabled) {
+      const reminder = await prisma.taskReminder.create({
+        data: {
+          taskId: task.id,
+          userId: req.user!.id,
+          remindAt: finalRemindAt,
+          status: 'PENDING',
+        },
+      });
 
-    const delay = Math.max(0, finalRemindAt.getTime() - Date.now());
-    await reminderQueue.add(
-      'send-reminder',
-      { reminderId: reminder.id },
-      { delay, jobId: `reminder:${reminder.id}` }
-    );
+      const delay = Math.max(0, finalRemindAt.getTime() - Date.now());
+      await reminderQueue.add(
+        'send-reminder',
+        { reminderId: reminder.id },
+        { delay, jobId: `reminder:${reminder.id}` }
+      );
+    }
 
     // Recalculate priority
     await prioritizationQueue.add(

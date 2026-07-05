@@ -44,6 +44,7 @@ export const Settings = () => {
   const [enableSmartReminders, setEnableSmartReminders] = useState(true);
   const [productivityStyle, setProductivityStyle] = useState('balanced');
   const [aiCoachingTone, setAiCoachingTone] = useState('friendly');
+  const [reminderLeadTimeMinutes, setReminderLeadTimeMinutes] = useState(60);
   
   // Theme state
   const [activeTheme, setActiveTheme] = useState<'light' | 'dark'>('light');
@@ -83,6 +84,7 @@ export const Settings = () => {
         setEnableSmartReminders(user.preferences.enableSmartReminders ?? true);
         setProductivityStyle(user.preferences.productivityStyle || 'balanced');
         setAiCoachingTone(user.preferences.aiCoachingTone || 'friendly');
+        setReminderLeadTimeMinutes((user.preferences as any).reminderLeadTimeMinutes ?? 60);
       }
     }
   }, [user]);
@@ -112,6 +114,7 @@ export const Settings = () => {
           enableSmartReminders,
           productivityStyle,
           aiCoachingTone,
+          reminderLeadTimeMinutes,
         }),
       });
       toast.success('PREFERENCES SAVED');
@@ -286,6 +289,19 @@ export const Settings = () => {
                   className="w-full bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2 text-xs focus:outline-none"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-[9px] font-label font-black text-gray-400 uppercase mb-0.5">Reminder Lead (mins)</label>
+              <input
+                type="number"
+                min="0"
+                max="120"
+                value={reminderLeadTimeMinutes}
+                onChange={(e) => setReminderLeadTimeMinutes(parseInt(e.target.value) || 60)}
+                className="w-full bg-[#FAF7F2] border-[2px] border-black rounded-xl p-2 text-xs focus:outline-none"
+              />
+              <p className="text-[9px] text-gray-400 mt-0.5">How many mins before due date to alert you</p>
             </div>
 
             <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-bold text-black py-1">
