@@ -2,11 +2,47 @@ import { Server, Socket } from 'socket.io';
 import { supabase } from './supabase';
 import { prisma } from './database';
 import { logger } from './logger';
+import { env } from './env';
+import { redis } from './redis';
+import Redis from 'ioredis';
 
 let globalIo: Server | null = null;
+let subRedis: Redis | null = null;
 
 export function setupWebSocket(io: Server) {
   globalIo = io;
+
+  // Initialize Redis subscriber connection for the WebSocket bridge
+  try {
+    subRedis = new Redis(env.REDIS_URL, {
+      ...(env.REDIS_URL.startsWith('rediss://') ? { tls: { rejectUnauthorized: false } } : {}),
+    });
+
+    subRedis.on('error', (err) => {
+      logger.error('Redis subscription client error:', err);
+    });
+
+    subRedis.subscribe('websocket-bridge').then(() => {
+      logger.info('Subscribed to Redis websocket-bridge channel successfully');
+    });
+
+    subRedis.on('message', (channel, message) => {
+      if (channel === 'websocket-bridge') {
+        try {
+          const { userId, event, payload } = JSON.parse(message);
+          if (globalIo) {
+            const roomName = `user_${userId}`;
+            globalIo.to(roomName).emit(event, payload);
+            logger.info(`[WS-Bridge] Emitted event '${event}' to room '${roomName}'`);
+          }
+        } catch (err) {
+          logger.error('[WS-Bridge] Failed to parse bridged message:', err);
+        }
+      }
+    });
+  } catch (err) {
+    logger.error('Failed to initialize Redis subscription bridge:', err);
+  }
 
   // Authentication Middleware for Socket.io
   io.use(async (socket: Socket, next) => {
@@ -56,10 +92,17 @@ export function setupWebSocket(io: Server) {
 
 export function emitToUser<T>(userId: string, event: string, payload: T) {
   if (globalIo) {
+    // If running in the main API server process where Socket.IO is active, emit directly
     const roomName = `user_${userId}`;
     globalIo.to(roomName).emit(event, payload);
-    logger.info(`WebSocket event '${event}' emitted to room '${roomName}'`);
+    logger.info(`WebSocket event '${event}' emitted directly to room '${roomName}'`);
   } else {
-    logger.warn(`Could not emit event: Socket.io is not initialized`);
+    // If running in the Worker process, publish to Redis bridge so the API server process forwards it
+    const message = JSON.stringify({ userId, event, payload });
+    redis.publish('websocket-bridge', message).catch((err) => {
+      logger.error('Failed to publish websocket event to Redis bridge:', err);
+    });
+    logger.info(`WebSocket event '${event}' published to Redis bridge for user_${userId}`);
   }
 }
+
