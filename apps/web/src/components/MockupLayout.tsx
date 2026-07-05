@@ -27,10 +27,10 @@ export const MockupLayout: React.FC<MockupLayoutProps> = ({ children, activeTab,
   ];
 
   return (
-    <div className="min-h-screen bg-dot-grid py-6 px-4 flex flex-col items-center justify-center font-body relative">
+    <div className="min-h-screen bg-dot-grid md:py-6 md:px-4 p-0 flex flex-col items-center justify-center font-body relative">
       
       {/* Mockup Phone Card Container */}
-      <div className="w-full max-w-[460px] min-h-[92vh] max-h-[95vh] bg-[#FAF7F2] border-[3px] border-black rounded-[42px] shadow-[8px_8px_0px_#000] flex flex-col justify-between overflow-hidden relative p-4 md:p-6 select-none">
+      <div className="w-full max-w-full md:max-w-[460px] min-h-screen md:min-h-[92vh] max-h-screen md:max-h-[95vh] bg-transparent md:bg-[#FAF7F2] border-none md:border-[3px] md:border-black rounded-none md:rounded-[42px] shadow-none md:shadow-[8px_8px_0px_#000] flex flex-col justify-between overflow-hidden relative p-4 md:p-6 select-none">
         
         {/* Top Profile Header Widget */}
         <div className="flex items-center justify-between border-b-[3px] border-black pb-4 mb-4">
