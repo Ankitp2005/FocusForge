@@ -60,14 +60,31 @@ function AppContent() {
     }
   }, []);
 
-  // ── Request notification permission on boot (Android 13+ requires explicit grant) ──
+  // ── Request notification permission and create channel on boot ──
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
-      LocalNotifications.requestPermissions().then((result) => {
-        if (result.display !== 'granted') {
+      LocalNotifications.requestPermissions().then(async (result) => {
+        if (result.display === 'granted') {
+          try {
+            // Android 8.0+ requires registering a notification channel 
+            // with high importance (5) to enable sound, vibration, and banner alerts.
+            await LocalNotifications.createChannel({
+              id: 'focusforge-reminders',
+              name: 'Task Reminders',
+              description: 'Alarms and reminders for scheduled tasks',
+              importance: 5, // 5 = Maximum importance (heads-up banner, sound, vibration)
+              sound: 'default',
+              visibility: 1, // Visible on lockscreen
+              vibration: true,
+            });
+            console.log('[Notification] Channel focusforge-reminders created successfully');
+          } catch (err) {
+            console.warn('[Notification] Failed to create notification channel:', err);
+          }
+        } else {
           console.warn('[Notification] Permission not granted. Native notifications will not fire.');
         }
-      }).catch(() => {/* Ignore — permissions may already be set */});
+      }).catch(() => {/* Ignore */});
     }
   }, []);
 
