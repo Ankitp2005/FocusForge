@@ -7,6 +7,9 @@ import { ChevronLeft, Mic, MicOff } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
+import { Capacitor } from '@capacitor/core';
+import { SpeechRecognition as NativeSpeech } from '@capgo/capacitor-speech-recognition';
+
 interface Message {
   id: string;
   role: 'user' | 'assistant';
@@ -35,7 +38,10 @@ export const AiCoach = () => {
   const recognitionRef = useRef<any>(null);
   const isStartingRef = useRef(false);
 
+  // ─── 1. Browser Speech Recognition (Fallback) ──────────────────────────
   useEffect(() => {
+    if (Capacitor.isNativePlatform()) return; // skip for native
+
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
@@ -72,7 +78,7 @@ export const AiCoach = () => {
     }
   }, []);
 
-  const toggleListening = () => {
+  const toggleBrowserListening = () => {
     if (!recognitionRef.current) {
       toast.error('SPEECH INPUT NOT SUPPORTED ON THIS BROWSER');
       return;
@@ -81,7 +87,7 @@ export const AiCoach = () => {
     if (isListening) {
       recognitionRef.current.stop();
     } else {
-      if (isStartingRef.current) return; // Prevent double-triggering
+      if (isStartingRef.current) return;
 
       try {
         isStartingRef.current = true;
@@ -93,6 +99,77 @@ export const AiCoach = () => {
           toast.error(`FAILED TO START: ${err.message || err.name || 'UNKNOWN ERROR'}`);
         }
       }
+    }
+  };
+
+  // ─── 2. Native Platform Speech Recognition ──────────────────────────────
+  const toggleNativeListening = async () => {
+    try {
+      if (isListening) {
+        await NativeSpeech.stop();
+        setIsListening(false);
+        return;
+      }
+
+      const { available } = await NativeSpeech.available();
+      if (!available) {
+        toast.error('SPEECH RECOGNITION NOT AVAILABLE ON DEVICE');
+        return;
+      }
+
+      // Handle native Android/iOS permissions check
+      const { speech } = await NativeSpeech.checkPermissions();
+      if (speech !== 'granted') {
+        const { speech: reqResult } = await NativeSpeech.requestPermissions();
+        if (reqResult !== 'granted') {
+          toast.error('MICROPHONE PERMISSION DENIED');
+          return;
+        }
+      }
+
+      setIsListening(true);
+      let capturedText = '';
+
+      // Register listener for transcription results
+      const listener = await NativeSpeech.addListener('partialResults', (data: any) => {
+        const matches = data.matches || data.value || [];
+        if (matches.length > 0) {
+          capturedText = matches[0];
+          setInput(matches[0]);
+        }
+      });
+
+      // Start native listener
+      await NativeSpeech.start({
+        language: 'en-US',
+        maxResults: 1,
+        prompt: 'SPEAK NOW...',
+        partialResults: true,
+        popup: true,
+      });
+
+      // Set timeout fallback to finalize speech
+      setTimeout(async () => {
+        await listener.remove();
+        setIsListening(false);
+        if (capturedText.trim()) {
+          sendMessage(capturedText);
+          setInput('');
+        }
+      }, 5000);
+
+    } catch (err: any) {
+      console.error('Native speech start failed:', err);
+      setIsListening(false);
+      toast.error('VOICE RECOGNITION FAILED');
+    }
+  };
+
+  const toggleListening = () => {
+    if (Capacitor.isNativePlatform()) {
+      toggleNativeListening();
+    } else {
+      toggleBrowserListening();
     }
   };
 
