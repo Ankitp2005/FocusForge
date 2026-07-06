@@ -9,6 +9,7 @@ import { fetchCalendarEvents } from './services/googleCalendar';
 import { sendReminderEmail } from './services/email';
 import { calculatePriorityScore } from './utils/priority';
 
+console.log('👷 Worker process starting...');
 logger.info('Worker process starting...');
 logger.info(`Environment: ${env.NODE_ENV}`);
 

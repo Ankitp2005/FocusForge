@@ -8,9 +8,11 @@ export const redis = new Redis(env.REDIS_URL, {
 });
 
 redis.on('error', (err) => {
+  console.error('❌ Redis connection error:', err);
   logger.error('Redis connection error:', err);
 });
 
 redis.on('connect', () => {
+  console.log('🔌 Connected to Redis database');
   logger.info('Connected to Redis');
 });

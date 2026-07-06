@@ -158,7 +158,15 @@ app.use(errorHandler);
 
 // ─── Start Server ──────────────────────────────────────────────────────────
 const PORT = env.PORT;
-httpServer.listen(PORT, () => {
+
+console.log(`[BOOT] Attempting to bind HTTP server to port ${PORT} on host 0.0.0.0`);
+
+httpServer.on('error', (err) => {
+  console.error('❌ [BOOT] HTTP Server failed to start:', err);
+});
+
+httpServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 [BOOT] FocusForge API successfully running on port ${PORT}`);
   logger.info(`🚀 FocusForge API running on port ${PORT}`);
   logger.info(`📊 Environment: ${env.NODE_ENV}`);
 });
