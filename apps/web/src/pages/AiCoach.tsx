@@ -33,6 +33,7 @@ export const AiCoach = () => {
   const [isListening, setIsListening] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
+  const isStartingRef = useRef(false);
 
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -44,6 +45,7 @@ export const AiCoach = () => {
 
       recognition.onstart = () => {
         setIsListening(true);
+        isStartingRef.current = false;
       };
 
       recognition.onresult = (event: any) => {
@@ -57,11 +59,13 @@ export const AiCoach = () => {
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error', event);
         setIsListening(false);
+        isStartingRef.current = false;
         toast.error(`SPEECH ERROR: ${event.error?.toUpperCase() || 'UNKNOWN'}`);
       };
 
       recognition.onend = () => {
         setIsListening(false);
+        isStartingRef.current = false;
       };
 
       recognitionRef.current = recognition;
@@ -77,11 +81,17 @@ export const AiCoach = () => {
     if (isListening) {
       recognitionRef.current.stop();
     } else {
+      if (isStartingRef.current) return; // Prevent double-triggering
+
       try {
+        isStartingRef.current = true;
         recognitionRef.current.start();
       } catch (err: any) {
+        isStartingRef.current = false;
         console.error('Failed to start speech recognition', err);
-        toast.error(`FAILED TO START: ${err.message || err.name || 'UNKNOWN ERROR'}`);
+        if (!err.message?.includes('already started')) {
+          toast.error(`FAILED TO START: ${err.message || err.name || 'UNKNOWN ERROR'}`);
+        }
       }
     }
   };
