@@ -68,7 +68,7 @@ export const AiCoach = () => {
     }
   }, []);
 
-  const toggleListening = async () => {
+  const toggleListening = () => {
     if (!recognitionRef.current) {
       toast.error('SPEECH INPUT NOT SUPPORTED ON THIS BROWSER');
       return;
@@ -78,14 +78,10 @@ export const AiCoach = () => {
       recognitionRef.current.stop();
     } else {
       try {
-        // Force native WebView microphone permission request
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach((track) => track.stop()); // release mic immediately
-        
         recognitionRef.current.start();
       } catch (err: any) {
-        console.error('Mic access error:', err);
-        toast.error('MICROPHONE ACCESS DENIED OR UNAVAILABLE');
+        console.error('Failed to start speech recognition', err);
+        toast.error('FAILED TO START VOICE INPUT');
       }
     }
   };
