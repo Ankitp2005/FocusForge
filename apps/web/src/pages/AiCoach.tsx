@@ -81,7 +81,7 @@ export const AiCoach = () => {
         recognitionRef.current.start();
       } catch (err: any) {
         console.error('Failed to start speech recognition', err);
-        toast.error('FAILED TO START VOICE INPUT');
+        toast.error(`FAILED TO START: ${err.message || err.name || 'UNKNOWN ERROR'}`);
       }
     }
   };
