@@ -118,10 +118,13 @@ export const AiCoach = () => {
       }
 
       // Handle native Android/iOS permissions check
-      const { speech } = (await NativeSpeech.checkPermissions()) as any;
-      if (speech !== 'granted') {
-        const { speech: reqResult } = (await NativeSpeech.requestPermissions()) as any;
-        if (reqResult !== 'granted') {
+      const perm = (await NativeSpeech.checkPermissions()) as any;
+      const status = perm.speech || perm.microphone || perm.audio;
+      
+      if (status !== 'granted') {
+        const req = (await NativeSpeech.requestPermissions()) as any;
+        const reqStatus = req.speech || req.microphone || req.audio;
+        if (reqStatus !== 'granted') {
           toast.error('MICROPHONE PERMISSION DENIED');
           return;
         }
