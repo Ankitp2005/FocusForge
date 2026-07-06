@@ -57,6 +57,7 @@ export const AiCoach = () => {
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error', event);
         setIsListening(false);
+        toast.error(`SPEECH ERROR: ${event.error?.toUpperCase() || 'UNKNOWN'}`);
       };
 
       recognition.onend = () => {
@@ -67,7 +68,7 @@ export const AiCoach = () => {
     }
   }, []);
 
-  const toggleListening = () => {
+  const toggleListening = async () => {
     if (!recognitionRef.current) {
       toast.error('SPEECH INPUT NOT SUPPORTED ON THIS BROWSER');
       return;
@@ -77,9 +78,14 @@ export const AiCoach = () => {
       recognitionRef.current.stop();
     } else {
       try {
+        // Force native WebView microphone permission request
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach((track) => track.stop()); // release mic immediately
+        
         recognitionRef.current.start();
-      } catch (err) {
-        console.error('Failed to start speech recognition', err);
+      } catch (err: any) {
+        console.error('Mic access error:', err);
+        toast.error('MICROPHONE ACCESS DENIED OR UNAVAILABLE');
       }
     }
   };
