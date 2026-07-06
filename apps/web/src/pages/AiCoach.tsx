@@ -125,7 +125,7 @@ export const AiCoach = () => {
         const req = (await NativeSpeech.requestPermissions()) as any;
         const reqStatus = req.speech || req.microphone || req.audio;
         if (reqStatus !== 'granted') {
-          toast.error('MICROPHONE PERMISSION DENIED');
+          toast.error(`MICROPHONE PERMISSION DENIED. CHECK: ${JSON.stringify(perm)} | REQ: ${JSON.stringify(req)}`);
           return;
         }
       }
