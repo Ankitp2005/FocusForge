@@ -44,6 +44,7 @@
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Microphone permission for AI Coach voice assistant -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- Notification permissions (required for local/push notifications) -->
