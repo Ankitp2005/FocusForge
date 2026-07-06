@@ -118,9 +118,9 @@ export const AiCoach = () => {
       }
 
       // Handle native Android/iOS permissions check
-      const { speech } = await NativeSpeech.checkPermissions();
+      const { speech } = (await NativeSpeech.checkPermissions()) as any;
       if (speech !== 'granted') {
-        const { speech: reqResult } = await NativeSpeech.requestPermissions();
+        const { speech: reqResult } = (await NativeSpeech.requestPermissions()) as any;
         if (reqResult !== 'granted') {
           toast.error('MICROPHONE PERMISSION DENIED');
           return;
