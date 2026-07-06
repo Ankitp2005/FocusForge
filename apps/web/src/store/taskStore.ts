@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { syncLocalNotifications } from '../lib/notifications';
 
 interface Task {
   id: string;
@@ -19,12 +20,23 @@ interface TaskStore {
 
 export const useTaskStore = create<TaskStore>((set) => ({
   tasks: [],
-  setTasks: (tasks) => set({ tasks }),
-  addTask: (task) => set((state) => ({ tasks: [task, ...state.tasks] })),
-  updateTask: (id, data) => set((state) => ({
-    tasks: state.tasks.map((t) => t.id === id ? { ...t, ...data } : t),
-  })),
-  removeTask: (id) => set((state) => ({
-    tasks: state.tasks.filter((t) => t.id !== id),
-  })),
+  setTasks: (tasks) => {
+    syncLocalNotifications(tasks);
+    set({ tasks });
+  },
+  addTask: (task) => set((state) => {
+    const updated = [task, ...state.tasks];
+    syncLocalNotifications(updated);
+    return { tasks: updated };
+  }),
+  updateTask: (id, data) => set((state) => {
+    const updated = state.tasks.map((t) => t.id === id ? { ...t, ...data } : t);
+    syncLocalNotifications(updated);
+    return { tasks: updated };
+  }),
+  removeTask: (id) => set((state) => {
+    const updated = state.tasks.filter((t) => t.id !== id);
+    syncLocalNotifications(updated);
+    return { tasks: updated };
+  }),
 }));
