@@ -131,35 +131,24 @@ export const AiCoach = () => {
       }
 
       setIsListening(true);
-      let capturedText = '';
 
-      // Register listener for transcription results
-      const listener = await NativeSpeech.addListener('partialResults', (data: any) => {
-        const matches = data.matches || data.value || [];
-        if (matches.length > 0) {
-          capturedText = matches[0];
-          setInput(matches[0]);
-        }
-      });
-
-      // Start native listener
-      await NativeSpeech.start({
+      // Start native speech recognizer (resolves when user stops speaking)
+      const result = (await NativeSpeech.start({
         language: 'en-US',
         maxResults: 1,
         prompt: 'SPEAK NOW...',
-        partialResults: true,
+        partialResults: false,
         popup: true,
-      });
+      })) as any;
 
-      // Set timeout fallback to finalize speech
-      setTimeout(async () => {
-        await listener.remove();
-        setIsListening(false);
-        if (capturedText.trim()) {
-          sendMessage(capturedText);
-          setInput('');
-        }
-      }, 5000);
+      setIsListening(false);
+
+      const matches = result.matches || result.value || [];
+      if (matches.length > 0) {
+        const text = matches[0];
+        setInput(''); // Clear input
+        sendMessage(text); // Send to AI Coach!
+      }
 
     } catch (err: any) {
       console.error('Native speech start failed:', err);
