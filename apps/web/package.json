@@ -2,6 +2,7 @@
   "name": "@lmls/web",
   "private": true,
   "version": "1.0.0",
+  "_trigger_build_flag": "4",
   "type": "module",
   "scripts": {
     "dev": "vite",
