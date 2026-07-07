@@ -172,15 +172,18 @@ async function executeTool(
           },
         });
 
-        // Schedule new reminder if due date is set
-        if (dueDate) {
+        // Schedule new reminder if due date is set and in the future
+        if (dueDate && dueDate.getTime() > Date.now()) {
           const userPrefs = await prisma.userPreferences.findUnique({
             where: { userId },
           });
           const smartRemindersEnabled = userPrefs?.enableSmartReminders !== false;
           if (smartRemindersEnabled) {
             const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 60;
-            const remindAt = new Date(dueDate.getTime() - leadTimeMins * 60 * 1000);
+            let remindAt = new Date(dueDate.getTime() - leadTimeMins * 60 * 1000);
+            if (remindAt.getTime() < Date.now()) {
+              remindAt = dueDate;
+            }
 
             const reminder = await prisma.taskReminder.create({
               data: {
@@ -273,15 +276,18 @@ async function executeTool(
             where: { taskId: task.id, status: 'PENDING' },
           });
 
-          // Schedule new reminder if new due date is set
-          if (newDueDate) {
+          // Schedule new reminder if new due date is set and in the future
+          if (newDueDate && newDueDate.getTime() > Date.now()) {
             const userPrefs = await prisma.userPreferences.findUnique({
               where: { userId },
             });
             const smartRemindersEnabled = userPrefs?.enableSmartReminders !== false;
             if (smartRemindersEnabled) {
               const leadTimeMins = userPrefs?.reminderLeadTimeMinutes ?? 60;
-              const remindAt = new Date(newDueDate.getTime() - leadTimeMins * 60 * 1000);
+              let remindAt = new Date(newDueDate.getTime() - leadTimeMins * 60 * 1000);
+              if (remindAt.getTime() < Date.now()) {
+                remindAt = newDueDate;
+              }
 
               const reminder = await prisma.taskReminder.create({
                 data: {

@@ -82,6 +82,9 @@ function AppContent() {
           }
         } else {
           console.warn('[Notification] Permission not granted. Native notifications will not fire.');
+          toast.error('NOTIFICATION PERMISSIONS ARE DENIED. ALARMS AND REMINDERS WILL NOT SHOW.', {
+            duration: 6000,
+          });
         }
       }).catch(() => {/* Ignore */});
     }
