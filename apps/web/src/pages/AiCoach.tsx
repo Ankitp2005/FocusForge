@@ -122,10 +122,14 @@ export const AiCoach = () => {
       const status = perm.speechRecognition || perm.speech || perm.microphone || perm.audio;
       
       if (status !== 'granted') {
+        if (status === 'denied') {
+          toast.error('MICROPHONE PERMISSION DENIED. PLEASE ENABLE IT IN YOUR DEVICE SETTINGS.');
+          return;
+        }
         const req = (await NativeSpeech.requestPermissions()) as any;
         const reqStatus = req.speechRecognition || req.speech || req.microphone || req.audio;
         if (reqStatus !== 'granted') {
-          toast.error('MICROPHONE PERMISSION DENIED');
+          toast.error('MICROPHONE PERMISSION DENIED. PLEASE ENABLE IT IN YOUR DEVICE SETTINGS.');
           return;
         }
       }
