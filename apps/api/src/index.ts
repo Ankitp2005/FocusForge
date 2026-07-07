@@ -29,6 +29,7 @@ import { globalRateLimiter } from './middleware/rateLimiter';
 import { requestLogger } from './middleware/requestLogger';
 
 const app = express();
+app.set('trust proxy', 1);
 const httpServer = createServer(app);
 
 // ─── WebSocket Server ──────────────────────────────────────────────────────
