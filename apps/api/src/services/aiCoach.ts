@@ -634,11 +634,30 @@ export async function runAICoachChatStream(
     };
   }
 
-  // Build message history from DB for Gemini chat
-  const history = conversation.messages.map((m) => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }],
-  }));
+  // Build message history from DB for Gemini chat (strictly sanitised)
+  let history: any[] = [];
+  let lastRole: string | null = null;
+
+  for (const m of conversation.messages) {
+    const role = m.role === 'assistant' ? 'model' : 'user';
+    if (role === lastRole) {
+      if (history.length > 0) {
+        history[history.length - 1].parts[0].text += '\n' + m.content;
+      }
+      continue;
+    }
+    history.push({
+      role,
+      parts: [{ text: m.content }],
+    });
+    lastRole = role;
+  }
+
+  // Gemini startChat history MUST end with a 'model' (assistant) message
+  if (history.length > 0 && history[history.length - 1].role === 'user') {
+    const lastUserMsg = history.pop();
+    userMessage = lastUserMsg.parts[0].text + '\n' + userMessage;
+  }
 
   // Save user message to DB
   await prisma.aiMessage.create({
