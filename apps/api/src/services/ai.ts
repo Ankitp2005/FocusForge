@@ -62,7 +62,12 @@ export async function parseTaskWithAI(text: string, timezone: string): Promise<A
   }
 
   const currentDateTime = new Date().toISOString();
-  const userLocalDateTime = new Date().toLocaleString('en-US', { timeZone: timezone });
+  let userLocalDateTime = '';
+  try {
+    userLocalDateTime = new Date().toLocaleString('en-US', { timeZone: timezone ? timezone.trim() : 'UTC' });
+  } catch (e) {
+    userLocalDateTime = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+  }
   
   const prompt = `
 You are a task parsing engine. Convert natural language task descriptions into structured task data.
@@ -176,20 +181,33 @@ Rules:
       
       try {
         // Resolve timezone offset safely using Intl.DateTimeFormat
-        const userTz = timezone || 'UTC';
+        let userTz = (timezone || 'UTC').trim();
         
         // Helper function to resolve UTC date from local date components in a given timezone
         const getUtcDate = (y: number, m: number, d: number, hr: number, mn: number, tz: string) => {
           const baseDate = new Date(Date.UTC(y, m, d, hr, mn));
-          const formatter = new Intl.DateTimeFormat('en-US', {
-            timeZone: tz,
-            hourCycle: 'h23',
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric'
-          });
+          let formatter;
+          try {
+            formatter = new Intl.DateTimeFormat('en-US', {
+              timeZone: tz.trim(),
+              hourCycle: 'h23',
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric'
+            });
+          } catch (e) {
+            formatter = new Intl.DateTimeFormat('en-US', {
+              timeZone: 'UTC',
+              hourCycle: 'h23',
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric'
+            });
+          }
           
           const parts = formatter.formatToParts(baseDate);
           const partMap = Object.fromEntries(parts.map(p => [p.type, p.value]));
@@ -206,13 +224,25 @@ Rules:
           return new Date(baseDate.getTime() + diffMs);
         };
 
-        const currentLocalFormatter = new Intl.DateTimeFormat('en-US', {
-          timeZone: userTz,
-          hourCycle: 'h23',
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-        });
+        let currentLocalFormatter;
+        try {
+          currentLocalFormatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: userTz,
+            hourCycle: 'h23',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          });
+        } catch (e) {
+          userTz = 'UTC';
+          currentLocalFormatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'UTC',
+            hourCycle: 'h23',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          });
+        }
         
         const currentLocalParts = currentLocalFormatter.formatToParts(new Date());
         const currentLocalMap = Object.fromEntries(currentLocalParts.map(p => [p.type, p.value]));

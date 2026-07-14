@@ -534,6 +534,14 @@ function buildCoachSystemPrompt(
 ): string {
   const prefs = user.preferences;
 
+  let userLocalTimeStr = '';
+  try {
+    userLocalTimeStr = new Date().toLocaleString('en-US', { timeZone: user.timezone ? user.timezone.trim() : 'UTC' });
+  } catch (e) {
+    logger.warn(`[AI Coach] Invalid timezone '${user.timezone}' for user. Defaulting to UTC.`);
+    userLocalTimeStr = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+  }
+
   const tasksContext = tasks.length > 0
     ? tasks.map(t => `- [${t.priority}] "${t.title}" (ID: ${t.id}, Due: ${t.dueDate ? new Date(t.dueDate).toISOString() : 'none'}, Category: ${t.category || 'none'}, Est: ${t.estimatedMins || 0}m)`).join('\n')
     : 'No active tasks.';
@@ -565,7 +573,7 @@ Current user context:
 - Name: ${user.name}
 - Timezone: ${user.timezone}
 - Current server time (UTC): ${new Date().toISOString()}
-- User current local time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
+- User current local time: ${userLocalTimeStr}
 - Plan: ${user.plan}
 - Work hours: ${prefs?.workStartHour ?? 9}:00 – ${prefs?.workEndHour ?? 18}:00
 - Productivity style: ${prefs?.productivityStyle || 'balanced'}

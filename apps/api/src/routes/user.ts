@@ -47,7 +47,7 @@ router.patch('/profile', async (req, res, next) => {
       where: { id: req.user!.id },
       data: {
         name: data.name,
-        timezone: data.timezone,
+        timezone: data.timezone ? data.timezone.trim() : undefined,
       },
       include: { preferences: true },
     });
