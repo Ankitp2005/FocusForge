@@ -710,10 +710,14 @@ export async function runAICoachChatStream(
   let finalText = '';
 
   for await (const chunk of resultStream.stream) {
-    const text = chunk.text();
-    if (text) {
-      finalText += text;
-      onChunk({ type: 'token', content: text });
+    try {
+      const text = chunk.text();
+      if (text) {
+        finalText += text;
+        onChunk({ type: 'token', content: text });
+      }
+    } catch (e) {
+      // Ignore: chunk only contains function calls, not text
     }
   }
 
@@ -742,10 +746,14 @@ export async function runAICoachChatStream(
 
     const followUpStream = await chat.sendMessageStream(partsToSend);
     for await (const chunk of followUpStream.stream) {
-      const text = chunk.text();
-      if (text) {
-        finalText += text;
-        onChunk({ type: 'token', content: text });
+      try {
+        const text = chunk.text();
+        if (text) {
+          finalText += text;
+          onChunk({ type: 'token', content: text });
+        }
+      } catch (e) {
+        // Ignore: chunk only contains function calls, not text
       }
     }
 
