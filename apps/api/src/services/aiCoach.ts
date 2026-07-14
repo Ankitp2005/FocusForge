@@ -154,7 +154,15 @@ async function executeTool(
 
       case 'create_task': {
         const priority = (toolInput.priority as Priority) || Priority.MEDIUM;
-        const dueDate = toolInput.dueDate ? new Date(toolInput.dueDate) : null;
+        let dueDate: Date | null = null;
+        if (toolInput.dueDate) {
+          const parsedDate = new Date(toolInput.dueDate);
+          if (!isNaN(parsedDate.getTime())) {
+            dueDate = parsedDate;
+          } else {
+            logger.warn(`[AI Coach] Invalid dueDate format supplied by AI: ${toolInput.dueDate}`);
+          }
+        }
         const priorityScore = calculatePriorityScore(priority, dueDate, new Date());
 
         const task = await prisma.task.create({
@@ -248,13 +256,28 @@ async function executeTool(
 
         const updateData: any = {};
         if (toolInput.title) updateData.title = toolInput.title;
-        if (toolInput.dueDate) updateData.dueDate = new Date(toolInput.dueDate);
         if (toolInput.priority) updateData.priority = toolInput.priority;
         if (toolInput.status) updateData.status = toolInput.status;
         if (toolInput.estimatedMins) updateData.estimatedMins = toolInput.estimatedMins;
 
         const newPriority = toolInput.priority || task.priority;
-        const newDueDate = toolInput.dueDate !== undefined ? (toolInput.dueDate ? new Date(toolInput.dueDate) : null) : task.dueDate;
+        let newDueDate: Date | null = task.dueDate;
+
+        if (toolInput.dueDate !== undefined) {
+          if (toolInput.dueDate) {
+            const parsedDate = new Date(toolInput.dueDate);
+            if (!isNaN(parsedDate.getTime())) {
+              newDueDate = parsedDate;
+              updateData.dueDate = parsedDate;
+            } else {
+              logger.warn(`[AI Coach] Invalid update dueDate format supplied by AI: ${toolInput.dueDate}`);
+            }
+          } else {
+            newDueDate = null;
+            updateData.dueDate = null;
+          }
+        }
+
         updateData.priorityScore = calculatePriorityScore(newPriority, newDueDate, task.createdAt);
 
         const updated = await prisma.task.update({
@@ -326,6 +349,9 @@ async function executeTool(
         if (!task) return JSON.stringify({ error: 'Task not found' });
 
         const snoozeUntilDate = new Date(toolInput.snoozeUntil);
+        if (isNaN(snoozeUntilDate.getTime())) {
+          return JSON.stringify({ error: 'Invalid snooze date format' });
+        }
 
         await prisma.task.update({
           where: { id: task.id },
@@ -419,6 +445,9 @@ async function executeTool(
 
         try {
           const startTime = new Date(toolInput.startTime);
+          if (isNaN(startTime.getTime())) {
+            throw new Error('Invalid start time date format');
+          }
           const endTime = new Date(startTime.getTime() + toolInput.durationMins * 60 * 1000);
           const event = await createCalendarEvent(integration.accessToken, integration.refreshToken, {
             summary: `FocusForge Focus: ${task.title}`,

@@ -82,6 +82,7 @@ router.post('/chat', aiRateLimiter, async (req, res, next) => {
 
     res.end();
   } catch (error) {
+    logger.error('Error in runAICoachChatStream:', error);
     if (res.headersSent) {
       res.write(`data: ${JSON.stringify({ type: 'error', message: (error as Error).message })}\n\n`);
       res.end();
