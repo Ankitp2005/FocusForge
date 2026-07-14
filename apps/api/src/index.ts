@@ -11,6 +11,7 @@ import { env } from './config/env';
 import { logger } from './config/logger';
 import { prisma } from './config/database';
 import { setupWebSocket } from './config/websocket';
+import { startWorkers } from './worker';
 
 // Routes
 import taskRoutes from './routes/tasks';
@@ -176,6 +177,9 @@ httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 [BOOT] FocusForge API successfully running on port ${PORT}`);
   logger.info(`🚀 FocusForge API running on port ${PORT}`);
   logger.info(`📊 Environment: ${env.NODE_ENV}`);
+
+  // Boot BullMQ workers in-process (free Render tier — no separate worker service)
+  startWorkers();
 });
 
 export default app;
