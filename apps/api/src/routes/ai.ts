@@ -5,6 +5,7 @@ import { parseTaskWithAI, planDayWithAI } from '../services/ai';
 import { runAICoachChatStream } from '../services/aiCoach';
 import { prisma } from '../config/database';
 import { aiRateLimiter } from '../middleware/rateLimiter';
+import { logger } from '../config/logger';
 
 const router = Router();
 router.use(authenticate);
