@@ -35,7 +35,13 @@ const httpServer = createServer(app);
 // ─── WebSocket Server ──────────────────────────────────────────────────────
 export const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: env.APP_URL,
+    origin: [
+      env.APP_URL,
+      'https://focusforge-frontend-9hi2.onrender.com',
+      'capacitor://localhost',  // Capacitor APK WebView origin (Android & iOS)
+      'https://localhost',      // Some Android WebView versions use this
+      'http://localhost',       // Local dev
+    ],
     credentials: true,
   },
 });

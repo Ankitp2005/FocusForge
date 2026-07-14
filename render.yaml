@@ -1,5 +1,5 @@
 services:
-  # 1. API Backend and Background Queue Worker (combined into a single Web Service)
+  # 1. API Backend (HTTP + WebSocket server)
   - type: web
     name: focusforge-api
     env: node
@@ -41,7 +41,42 @@ services:
       - key: APP_URL
         value: https://focusforge-frontend-9hi2.onrender.com
 
-  # 2. Frontend React Client (Static Website Hosting)
+  # 2. Background Queue Worker (BullMQ consumer — processes reminders, prioritization, calendar sync)
+  #    THIS MUST RUN ALONGSIDE THE API. Without it, all queued reminder jobs sit in Redis unprocessed.
+  - type: worker
+    name: focusforge-worker
+    env: node
+    plan: free
+    autoDeploy: true
+    branch: main
+    buildCommand: NODE_ENV=development npm install && npm run build
+    startCommand: node dist/worker.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NPM_CONFIG_PRODUCTION
+        value: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: focusforge-redis
+          property: connectionString
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: APP_URL
+        value: https://focusforge-frontend-9hi2.onrender.com
+
+  # 3. Frontend React Client (Static Website Hosting)
   - type: web
     name: focusforge-frontend
     env: static
