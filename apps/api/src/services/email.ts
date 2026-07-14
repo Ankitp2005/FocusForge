@@ -39,6 +39,11 @@ export async function sendReminderEmail(to: string, title: string, priority: str
 
     if (error) {
       logger.error('Failed to send email via Resend', error);
+      if (env.RESEND_API_KEY && env.RESEND_API_KEY !== 'mock_resend_key') {
+        console.warn(
+          `⚠️ [Resend Sandbox Restriction] If using onboarding@resend.dev, emails can ONLY be sent to the owner of the Resend account. Delivery to ${to} was rejected.`
+        );
+      }
     } else {
       logger.info(`Reminder email sent successfully to ${to}, id: ${data?.id}`);
     }

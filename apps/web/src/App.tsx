@@ -147,7 +147,7 @@ function AppContent() {
 
   useEffect(() => {
     const handleTaskUpdated = () => {
-      queryClientInstance.invalidateQueries({ queryKey: ['tasks'] });
+      queryClientInstance.invalidateQueries({ queryKey: ['tasks'], refetchType: 'all' });
     };
 
     const handleReminderFired = async (reminder: Reminder) => {

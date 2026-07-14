@@ -220,7 +220,7 @@ export const AiCoach = () => {
                   setMessages((prev) => prev.map((m) => m.id === coachMsgId ? { ...m, toolsUsed: tools } : m));
                 } else if (data.type === 'done') {
                   if (data.conversationId) setConversationId(data.conversationId);
-                  queryClient.invalidateQueries({ queryKey: ['tasks'] });
+                  queryClient.invalidateQueries({ queryKey: ['tasks'], refetchType: 'all' });
                 } else if (data.type === 'error') {
                   throw new Error(data.message);
                 }

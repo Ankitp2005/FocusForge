@@ -136,7 +136,7 @@ export const useCreateTask = () => {
         });
       });
 
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'], refetchType: 'all' });
       toast.success('TASK INITIALIZED');
     },
     onError: (err: any, _variables, context) => {
@@ -183,7 +183,7 @@ export const useCompleteTask = () => {
         });
       });
 
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'], refetchType: 'all' });
       toast.success(data.celebrationMessage || 'TASK COMPLETE');
     },
     onError: (err: any) => {
@@ -204,7 +204,7 @@ export const useUpdateTask = () => {
       }),
     onSuccess: (data) => {
       updateTask(data.task.id, data.task);
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'], refetchType: 'all' });
     },
     onError: (err: any) => {
       toast.error(err.message || 'FAILED TO UPDATE TASK');
@@ -236,7 +236,7 @@ export const useSnoozeTask = () => {
         });
       });
 
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'], refetchType: 'all' });
       toast.success('TASK SNOOZED');
     },
     onError: (err: any) => {

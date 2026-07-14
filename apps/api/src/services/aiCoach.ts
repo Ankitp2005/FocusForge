@@ -269,7 +269,7 @@ async function executeTool(
             where: { taskId: task.id, status: 'PENDING' },
           });
           for (const oldRem of oldReminders) {
-            const job = await reminderQueue.getJob(`reminder:${oldRem.id}`);
+            const job = await reminderQueue.getJob(`reminder-${oldRem.id}`);
             if (job) await job.remove();
           }
           await prisma.taskReminder.deleteMany({

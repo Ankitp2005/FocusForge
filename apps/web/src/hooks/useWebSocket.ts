@@ -25,7 +25,7 @@ export const useWebSocket = (token: string | null, onReminder?: (reminder: Remin
     if (!token || isConnectedRef.current) return;
 
     const handleTaskUpdated = () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'], refetchType: 'all' });
     };
 
     const handleReminderFired = (reminder: ReminderPayload) => {
