@@ -3,7 +3,7 @@ import { supabase } from './supabase';
 import { prisma } from './database';
 import { logger } from './logger';
 import { env } from './env';
-import { redis } from './redis';
+import { redis, pubRedis } from './redis';
 import Redis from 'ioredis';
 
 let globalIo: Server | null = null;
@@ -99,7 +99,7 @@ export function emitToUser<T>(userId: string, event: string, payload: T) {
   } else {
     // If running in the Worker process, publish to Redis bridge so the API server process forwards it
     const message = JSON.stringify({ userId, event, payload });
-    redis.publish('websocket-bridge', message).catch((err) => {
+    pubRedis.publish('websocket-bridge', message).catch((err) => {
       logger.error('Failed to publish websocket event to Redis bridge:', err);
     });
     logger.info(`WebSocket event '${event}' published to Redis bridge for user_${userId}`);
